@@ -1,0 +1,11 @@
+# Add any directories, files, or patterns you don't want to be tracked by version control
+
+# Git ignores cmake generated files
+bin
+
+# Git ignores Visual Studio Generated files & folders
+Debug
+Release
+.vs
+*log
+*sln
