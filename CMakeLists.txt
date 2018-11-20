@@ -5,11 +5,30 @@ project(SubAttack)
 
 # Specify project files: header files and source files
 set(HDRS
-    asteroid.h camera.h game.h resource.h resource_manager.h scene_graph.h scene_node.h player.h turret.h
+    asteroid.h 
+	camera.h 
+	game.h 
+	resource.h 
+	resource_manager.h 
+	scene_graph.h 
+	scene_node.h 
+	player.h 
+	turret.h
 )
  
 set(SRCS
-    asteroid.cpp camera.cpp game.cpp main.cpp resource.cpp resource_manager.cpp scene_graph.cpp scene_node.cpp player.cpp turret.cpp material_vp.glsl material_fp.glsl
+    asteroid.cpp 
+	camera.cpp 
+	game.cpp 
+	main.cpp 
+	resource.cpp 
+	resource_manager.cpp 
+	scene_graph.cpp 
+	scene_node.cpp 
+	player.cpp 
+	turret.cpp 
+	material_vp.glsl 
+	material_fp.glsl
 
 )
 
