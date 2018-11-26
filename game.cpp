@@ -103,6 +103,8 @@ void Game::InitEventHandlers(void){
 
     // Set event callbacks
     glfwSetKeyCallback(window_, KeyCallback);
+	glfwSetCursorPosCallback(window_, MouseCallback);
+	glfwSetCursorEnterCallback(window_, MouseEnterCallback);
     glfwSetFramebufferSizeCallback(window_, ResizeCallback);
 
     // Set pointer to game object, so that callbacks can access it
@@ -125,7 +127,11 @@ void Game::SetupResources(void){
 	resman_.CreateCylinder("TurLowerCylinder", 1, 0.1);
 	resman_.CreateCylinder("TurUpperCylinder", 1, 0.05);
 
+	resman_.CreateCube("WorldCube", glm::vec3(0.6, 0.6, 0.45));
+
 	resman_.CreateCylinder("PlayerCylinder", 2, 0.5);
+
+	resman_.CreateCylinder("MissileCylinder", 1, 0.25);
 }
 
 
@@ -134,17 +140,19 @@ void Game::SetupScene(void){
     // Set background color for the scene
     scene_.SetBackgroundColor(viewport_background_color_g);
 
+	world = new World("World", resman_.GetResource("WorldCube"), resman_.GetResource("ObjectMaterial"));
+	world->SetPosition(glm::vec3((world->getBounds()[0] + world->getBounds()[1]) / 2, world->getFloor() - 1.0, (world->getBounds()[4] + world->getBounds()[5]) / 2));
+	world->SetScale(glm::vec3(world->getBounds()[1] - world->getBounds()[0], 2, world->getBounds()[5] - world->getBounds()[4]));
+	scene_.AddNode(world);
+
+	player_ = new Player("Player", resman_.GetResource("PlayerCylinder"), resman_.GetResource("ObjectMaterial"));
+	player_->SetPosition(glm::vec3(0, 100, 150));
+	scene_.AddNode(player_);
+
     // Create asteroid field
     CreateAsteroidField();
 
-	Turret *turret = new Turret(std::string("TestTurret"), &resman_);
-	turret->SetPosition(glm::vec3(0, -125, 300));
-	turret->SetScale(glm::vec3(10, 10, 10));
-	scene_.AddNode(turret);
-
-	player_ = new Player("Player", resman_.GetResource("PlayerCylinder"), resman_.GetResource("ObjectMaterial"));
-	player_->SetPosition(glm::vec3(0, -100, 150));
-	scene_.AddNode(player_);
+	CreateTowers();
 }
 
 
@@ -162,7 +170,64 @@ void Game::MainLoop(void){
             }
         }
 
-		if (firingLaser_) {
+		Attack* newAttack = player_->getNewAttack();
+		if (newAttack) {
+			attacks_.push_back(newAttack);
+			SceneNode* newNode = newAttack->createSceneNode(&resman_);
+			scene_.AddNode(newNode);
+		}
+
+		for (int i = 0; i < turrets_.size(); i++) {
+			Attack* newAttack = turrets_[i]->getNewAttack();
+			if (newAttack) {
+				attacks_.push_back(newAttack);
+				SceneNode* newNode = newAttack->createSceneNode(&resman_);
+				scene_.AddNode(newNode);
+			}
+		}
+
+		for (int i = 0; i < attacks_.size(); i++) {
+			attacks_[i]->Update();
+
+			if (attacks_[i]->getBounds().intersects(player_->getBounds())) {
+				Attack* rmAttack = attacks_[i];
+				attacks_.erase(attacks_.begin() + i);
+				scene_.RemoveNode(rmAttack->getSceneNode());
+				i--;
+				continue;
+			}
+
+			for (int j = 0; j < turrets_.size(); j++) {
+				if (attacks_[i]->getBounds().intersects(turrets_[j]->getBounds())) {
+					Attack* rmAttack = attacks_[i];
+					Turret* rmTurret = turrets_[j];
+					attacks_.erase(attacks_.begin() + i);
+					turrets_.erase(turrets_.begin() + j);
+					scene_.RemoveNode(rmTurret);
+					scene_.RemoveNode(rmAttack->getSceneNode());
+					i--; j--;
+					delete rmAttack;
+					delete rmTurret;
+					break;
+				}
+			}
+		}
+
+		//Bounding the Player within the game world
+		if (player_->GetPosition().x < world->getBounds()[0])
+			player_->Translate(glm::vec3(world->getBounds()[0] - player_->GetPosition().x, 0, 0));
+		else if (player_->GetPosition().x > world->getBounds()[1])
+			player_->Translate(glm::vec3(world->getBounds()[1] - player_->GetPosition().x, 0, 0));
+		if (player_->GetPosition().y < world->getBounds()[2])
+			player_->Translate(glm::vec3(0, world->getBounds()[2] - player_->GetPosition().y, 0));
+		else if (player_->GetPosition().y > world->getBounds()[3])
+			player_->Translate(glm::vec3(0, world->getBounds()[3] - player_->GetPosition().y, 0));
+		if (player_->GetPosition().z < world->getBounds()[4])
+			player_->Translate(glm::vec3(0, 0, world->getBounds()[4] - player_->GetPosition().z));
+		else if (player_->GetPosition().z > world->getBounds()[5])
+			player_->Translate(glm::vec3(0, 0, world->getBounds()[5] - player_->GetPosition().z));
+
+		/*if (firingLaser_) {
 			std::vector<int> astHitIdx;
 			glm::vec3 beamPos1 = player_->GetPosition();
 			glm::vec3 beamPos2 = player_->GetPosition() + glm::vec3(0, 0, 50) * player_->GetForward();
@@ -182,11 +247,11 @@ void Game::MainLoop(void){
 			camera_.SetView(player_->GetPosition() + -30.0f * player_->GetForward() + glm::vec3(0, 5, 0), lookAt, upVec);
 		else camera_.SetView(player_->GetPosition() + player_->GetForward() * 2.0f, lookAt, upVec);*/
 
-		glm::vec3 lookAt = player_->GetPosition() + glm::vec3(0, 0, 50) * player_->GetForward();
+		glm::vec3 lookAt = player_->GetPosition() + glm::vec3(0, 0, 50) * camRotation_ * player_->GetForward();
 		glm::vec3 upVec(0, 1, 0);
 		if (thirdPerson_) 
-			camera_.SetView(player_->GetPosition() + glm::vec3(0, 5, -30) * player_->GetForward(), lookAt, upVec);
-		else camera_.SetView(player_->GetPosition() + glm::vec3(0, 0, 1) * player_->GetForward(), lookAt, upVec);
+			camera_.SetView(player_->GetPosition() + glm::vec3(0, 5, -30) * camRotation_ * player_->GetForward(), lookAt, upVec);
+		else camera_.SetView(player_->GetPosition() + glm::vec3(0, 0, 1) * camRotation_ * player_->GetForward(), lookAt, upVec);
 
         // Draw the scene
         scene_.Draw(&camera_);
@@ -238,15 +303,44 @@ void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, in
     if (key == GLFW_KEY_LEFT_CONTROL){
 		game->player_->Fall();
     }
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS && !(game->firingLaser_)) {
-		std::cout << "Firing" << std::endl;
-		game->firingLaser_ = true;
-		game->player_->BeginLaser();
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
+		game->player_->fire();
 	}
-	if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE && (game->firingLaser_)) {
-		std::cout << "Stoping" << std::endl;
-		game->firingLaser_ = false;
-		game->player_->EndLaser();
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
+		game->player_->changeFireType(1);
+	}
+	if (key == GLFW_KEY_2 && action == GLFW_PRESS) {
+		game->player_->changeFireType(2);
+	}
+	if (key == GLFW_KEY_3 && action == GLFW_PRESS) {
+		game->player_->changeFireType(3);
+	}
+}
+
+void Game::MouseCallback(GLFWwindow* window, double x, double y) {
+	// Get user data with a pointer to the game class
+	void* ptr = glfwGetWindowUserPointer(window);
+	Game *game = (Game *)ptr;
+
+	if (game->prevMouseX != -999 && game->prevMouseY != -999) {
+		float horzRotation = ((game->prevMouseX - x) / 200.0) / glm::pi<float>();
+		float vertRotation = ((game->prevMouseY - y) / 200.0) / glm::pi<float>();
+		game->camRotation_ *= glm::angleAxis(horzRotation, glm::vec3(0.0, 1.0, 0.0));
+		game->camRotation_ *= glm::angleAxis(vertRotation, glm::vec3(1.0, 0.0, 0.0));
+	}
+
+	game->prevMouseX = x;
+	game->prevMouseY = y;
+}
+
+void Game::MouseEnterCallback(GLFWwindow* window, int entered) {
+	// Get user data with a pointer to the game class
+	void* ptr = glfwGetWindowUserPointer(window);
+	Game *game = (Game *)ptr;
+
+	if (!entered) {
+		game->prevMouseX = -999;
+		game->prevMouseY = -999;
 	}
 }
 
@@ -303,10 +397,28 @@ void Game::CreateAsteroidField(int num_asteroids){
 
         // Set attributes of asteroid: random position, orientation, and
         // angular momentum
-        ast->SetPosition(glm::vec3(-300.0 + 600.0*((float) rand() / RAND_MAX), -300.0 + 600.0*((float) rand() / RAND_MAX), 600.0*((float) rand() / RAND_MAX)));
+        ast->SetPosition(world->getRandomPosition());
         ast->SetOrientation(glm::normalize(glm::angleAxis(glm::pi<float>()*((float) rand() / RAND_MAX), glm::vec3(((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX)))));
         ast->SetAngM(glm::normalize(glm::angleAxis(0.05f*glm::pi<float>()*((float) rand() / RAND_MAX), glm::vec3(((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX)))));
     }
+}
+
+void Game::CreateTowers(int num_towers) {
+	for (int i = 0; i < num_towers; i++) {
+		// Create instance name
+		std::stringstream ss;
+		ss << i;
+		std::string index = ss.str();
+		std::string name = "TurretInstance" + index;
+
+		Turret *tower = new Turret(name, &resman_);
+		tower->SetScale(glm::vec3(5, 5, 5));
+		tower->setPlayer(player_);
+		tower->SetPosition(world->getRandomFloorPosition() + glm::vec3(0, 2, 0));
+		scene_.AddNode(tower);
+		turrets_.push_back(tower);
+
+	}
 }
 
 } // namespace game

@@ -459,7 +459,7 @@ void ResourceManager::CreateCylinder(std::string object_name, float height, floa
 }
 
 // Create the geometry of a cube centered at (0, 0, 0) with sides of length 1
-void ResourceManager::CreateCube(std::string object_name) {
+void ResourceManager::CreateCube(std::string object_name, glm::vec3 color) {
 
 	// The construction does not use shared vertices, since we need to assign appropriate normals to each face to create sharp edges
 	// Each face of the cube is defined by four vertices (with the same normal) and two triangles
@@ -476,6 +476,14 @@ void ResourceManager::CreateCube(std::string object_name) {
 		-0.5, -0.5,  0.5,    0.0,  0.0,  1.0,    0.0, 0.0, 1.0,		0.5, 0.5,
 		-0.5, -0.5, -0.5,    0.0,  0.0, -1.0,    0.0, 0.0, 1.0,		0.5, 0.5
 	};
+
+	if (color.r >= 0 && color.r <= 1) {
+		for (int i = 0; i < 8; i++) {
+			vertex[i * 11 + 6] = color.r;
+			vertex[i * 11 + 7] = color.g;
+			vertex[i * 11 + 8] = color.b;
+		}
+	}
 
 	GLuint face[] = {
 		6, 2, 0,

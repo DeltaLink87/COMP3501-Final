@@ -14,6 +14,9 @@ set(HDRS
 	scene_node.h 
 	player.h 
 	turret.h
+	world.h
+	bound.h
+	attack.h
 )
  
 set(SRCS
@@ -27,6 +30,9 @@ set(SRCS
 	scene_node.cpp 
 	player.cpp 
 	turret.cpp 
+	world.cpp
+	bound.cpp
+	attack.cpp
 	material_vp.glsl 
 	material_fp.glsl
 

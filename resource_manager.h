@@ -38,7 +38,7 @@ namespace game {
 			//Create the geometry for a cylinder
 			void CreateCylinder(std::string object_name, float height = 1.0, float radius = 0.5, int numCircleSamples = 30);
 			//Create the geometry for a cylinder
-			void CreateCube(std::string object_name);
+			void CreateCube(std::string object_name, glm::vec3 color = glm::vec3(-1, -1, -1));
 
         private:
             // List storing all resources

@@ -13,6 +13,7 @@
 #include "asteroid.h"
 #include "turret.h"
 #include "player.h"
+#include "world.h"
 
 #include <iostream>
 
@@ -58,13 +59,19 @@ namespace game {
             // Camera abstraction
             Camera camera_;
 
+			World* world;
+
 			Player* player_;
 
             // Flag to turn animation on/off
             bool animating_;
-			bool thirdPerson_;
-			bool firingLaser_;
+			bool thirdPerson_ = true;
 
+			double prevMouseY = -999, prevMouseX = -999;
+			glm::quat camRotation_ = glm::angleAxis(0 / glm::pi<float>(), glm::vec3(0.0, 0.0, 1.0));
+
+			std::vector<Attack *> attacks_;
+			std::vector<Turret *> turrets_;
 			std::vector<Asteroid *> asteriods_;
 
             // Methods to initialize the game
@@ -74,6 +81,8 @@ namespace game {
  
             // Methods to handle events
             static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+			static void MouseCallback(GLFWwindow* window, double x, double y);
+			static void MouseEnterCallback(GLFWwindow* window, int entered);
             static void ResizeCallback(GLFWwindow* window, int width, int height);
 
             // Asteroid field
@@ -81,6 +90,8 @@ namespace game {
             Asteroid *CreateAsteroidInstance(std::string entity_name, std::string object_name, std::string material_name);
             // Create entire random asteroid field
             void CreateAsteroidField(int num_asteroids = 1500);
+			// Create entire random towers
+			void CreateTowers(int num_towers = 10);
 
     }; // class Game
 

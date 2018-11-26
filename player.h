@@ -2,6 +2,7 @@
 #define PLAYER_H_
 
 #include "scene_node.h"
+#include "attack.h"
 
 namespace game {
 	class Player : public SceneNode
@@ -21,15 +22,20 @@ namespace game {
 
 		void Update();
 
-		void BeginLaser();
-		void EndLaser();
+		void fire();
+		void changeFireType(int type);
+		Attack* getNewAttack();
+		Bound getBounds() const;
 
 	private:
 		glm::quat forward_ = glm::angleAxis(0/glm::pi<float>(), glm::vec3(0.0, 0.0, 1.0));
 
 		float speed_ = 1;
 
-		SceneNode* laser;
+		int fireType = 1;
+
+		Attack* attack = NULL;
+		Bound bounds = Bound(glm::vec3(), glm::vec3(), 1);
 	};
 }
 
