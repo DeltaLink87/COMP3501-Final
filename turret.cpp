@@ -19,6 +19,10 @@ Turret::Turret(const std::string name, ResourceManager* rm) : SceneNode(name + "
 	lowerCannon_->SetJointPos(glm::vec3(0, -0.5, 0));
 	lowerCannon_->SetOrientation(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0)));
 	upperCannon_->SetPosition(glm::vec3(0, 0.5, 0.0));
+
+
+	health = 10;
+	isDead = 1;
 }
 
 Turret::~Turret() {}
@@ -80,6 +84,16 @@ void Turret::Update() {
 	body_->SetOrientation(glm::angleAxis(turretRotation_, glm::vec3(0.0, 1.0, 0.0)));
 	lowerCannon_->SetOrientation(glm::angleAxis(cannonLevel_, glm::vec3(1.0, 0.0, 0.0)));
 	upperCannon_->SetPosition(glm::vec3(0, cannonBarrelLength, 0.0));
+}
+
+
+
+void Turret::takeDamage() {
+	health -= 1;
+	std::printf("%d", health);
+	if (health <= 0) {
+		isDead = 0;
+	}
 }
 
 void Turret::setPlayer(Player* player) {

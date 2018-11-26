@@ -14,7 +14,9 @@ namespace game {
 		Turret(const std::string name, ResourceManager* rm);
 		~Turret();
 
+		int isDead = 1;
 		void Update(void);
+		void takeDamage();
 
 		void setPlayer(Player* player);
 
@@ -38,6 +40,8 @@ namespace game {
 
 		float coolDown = 0;
 		Attack* attack = NULL;
+		int health = 10;
+
 	};
 }
 

@@ -4,6 +4,10 @@ namespace game {
 
 	Player::Player(const std::string name, const Resource *geometry, const Resource *material) : SceneNode(name, geometry, material) {
 		this->SetOrientation(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0)));
+
+		health = 10;
+		points = 0;
+		isDead = 1;
 	}
 
 	Player::~Player() {}
@@ -69,6 +73,13 @@ namespace game {
 
 	void Player::changeFireType(int type) {
 		fireType = type;
+	}
+
+	void Player::takeDamage() {
+		health -= 1;
+		if (health <= 0) {
+			isDead = 0;
+		}
 	}
 
 	Attack* Player::getNewAttack() {

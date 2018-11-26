@@ -23,9 +23,12 @@ namespace game {
 		void Update();
 
 		void fire();
+		void takeDamage();
 		void changeFireType(int type);
 		Attack* getNewAttack();
 		Bound getBounds() const;
+		int isDead = 1;
+
 
 	private:
 		glm::quat forward_ = glm::angleAxis(0/glm::pi<float>(), glm::vec3(0.0, 0.0, 1.0));
@@ -36,6 +39,10 @@ namespace game {
 
 		Attack* attack = NULL;
 		Bound bounds = Bound(glm::vec3(), glm::vec3(), 1);
+
+		int health = 10;
+		int points = 0;
+
 	};
 }
 
