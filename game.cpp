@@ -204,9 +204,18 @@ void Game::MainLoop(void){
 				Attack* rmAttack = attacks_[i];
 				attacks_.erase(attacks_.begin() + i);
 				scene_.RemoveNode(rmAttack->getSceneNode());
+				player_->takeDamage();
+
+				//death checking 
+				if (player_->isDead == 0) {
+					scene_.RemoveNode(player_);
+					player_->isDead = -1;
+				}
+
 				i--;
 				continue;
 			}
+
 
 			for (int j = 0; j < turrets_.size(); j++) {
 				if (attacks_[i]->getBounds().intersects(turrets_[j]->getBounds())) {
@@ -218,6 +227,7 @@ void Game::MainLoop(void){
 					scene_.RemoveNode(rmAttack->getSceneNode());
 
 					if (turrets_[j]->isDead == 0) {
+						turrets_[j]->isDead = -1;
 						turrets_.erase(turrets_.begin() + j);
 
 
@@ -249,11 +259,6 @@ void Game::MainLoop(void){
 
 
 
-		//death checking 
-		if (player_->isDead == 0) {
-			scene_.RemoveNode(player_);
-			player_->isDead = -1;
-		}
 
 		/*if (firingLaser_) {
 			std::vector<int> astHitIdx;

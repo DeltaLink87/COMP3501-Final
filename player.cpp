@@ -5,7 +5,7 @@ namespace game {
 	Player::Player(const std::string name, const Resource *geometry, const Resource *material) : SceneNode(name, geometry, material) {
 		this->SetOrientation(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0)));
 
-		health = 10;
+		health = 20;
 		points = 0;
 		isDead = 1;
 	}
@@ -77,6 +77,8 @@ namespace game {
 
 	void Player::takeDamage() {
 		health -= 1;
+		std::printf("%d", health);
+
 		if (health <= 0) {
 			isDead = 0;
 		}
