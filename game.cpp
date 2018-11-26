@@ -135,12 +135,9 @@ void Game::SetupScene(void){
     scene_.SetBackgroundColor(viewport_background_color_g);
 
     // Create asteroid field
-    CreateAsteroidField();
+    //CreateAsteroidField();
+	CreateEnemies(100);
 
-	Turret *turret = new Turret(std::string("TestTurret"), &resman_);
-	turret->SetPosition(glm::vec3(0, -125, 300));
-	turret->SetScale(glm::vec3(10, 10, 10));
-	scene_.AddNode(turret);
 
 	player_ = new Player("Player", resman_.GetResource("PlayerCylinder"), resman_.GetResource("ObjectMaterial"));
 	player_->SetPosition(glm::vec3(0, -100, 150));
@@ -174,6 +171,14 @@ void Game::MainLoop(void){
 				}
 			}
 		}
+
+		if (player_->isDead == 0) {
+			scene_.RemoveNode(player_);
+			player_->isDead == -1;
+		}
+
+
+
 
 		/*std::cout << (player_->GetForward() * 50.0f).x << ", " << (player_->GetForward() * 50.0f).y << ", " << (player_->GetForward() * 50.0f).z << std::endl;
 		glm::vec3 lookAt = player_->GetPosition() + player_->GetForward() * 50.0f;
@@ -287,6 +292,27 @@ Asteroid *Game::CreateAsteroidInstance(std::string entity_name, std::string obje
 }
 
 
+Enemies *Game::CreateEnemyInstance(std::string entity_name, std::string object_name, std::string material_name) {
+
+	// Get resources
+	Resource *geom = resman_.GetResource(object_name);
+	if (!geom) {
+		throw(GameException(std::string("Could not find resource \"") + object_name + std::string("\"")));
+	}
+
+	Resource *mat = resman_.GetResource(material_name);
+	if (!mat) {
+		throw(GameException(std::string("Could not find resource \"") + material_name + std::string("\"")));
+	}
+
+	// Create asteroid instance
+	Enemies *enm = new Enemies(entity_name, geom, mat);
+	scene_.AddNode(enm->addTurret(entity_name, &resman_));
+
+	scene_.AddNode(enm);
+	return enm;
+}
+
 void Game::CreateAsteroidField(int num_asteroids){
 
     // Create a number of asteroid instances
@@ -307,6 +333,26 @@ void Game::CreateAsteroidField(int num_asteroids){
         ast->SetOrientation(glm::normalize(glm::angleAxis(glm::pi<float>()*((float) rand() / RAND_MAX), glm::vec3(((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX)))));
         ast->SetAngM(glm::normalize(glm::angleAxis(0.05f*glm::pi<float>()*((float) rand() / RAND_MAX), glm::vec3(((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX)))));
     }
+}
+
+
+void Game::CreateEnemies(int num_Enemies) {
+
+	// Create a number of asteroid instances
+	for (int i = 0; i < num_Enemies; i++) {
+		// Create instance name
+		std::stringstream ss;
+		ss << i;
+		std::string index = ss.str();
+		std::string name = "EnemyInstance" + index;
+
+		// Create asteroid instance
+		Enemies *enm = CreateEnemyInstance(name, "TurTowerCube", "ObjectMaterial");
+		enemies_.push_back(enm);
+		// Set attributes of asteroid: random position, orientation, and
+		// angular momentum
+		enm->SetPosition(glm::vec3(-300.0 + 600.0*((float)rand() / RAND_MAX), -300.0 + 600.0*((float)rand() / RAND_MAX), 600.0*((float)rand() / RAND_MAX)));
+	}
 }
 
 } // namespace game

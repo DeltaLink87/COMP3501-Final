@@ -13,6 +13,7 @@
 #include "asteroid.h"
 #include "turret.h"
 #include "player.h"
+#include "enemies.h"
 
 #include <iostream>
 
@@ -60,6 +61,9 @@ namespace game {
 
 			Player* player_;
 
+			std::vector<Enemies *> enemies_;
+
+
             // Flag to turn animation on/off
             bool animating_;
 			bool thirdPerson_;
@@ -79,8 +83,12 @@ namespace game {
             // Asteroid field
             // Create instance of one asteroid
             Asteroid *CreateAsteroidInstance(std::string entity_name, std::string object_name, std::string material_name);
+			Enemies *CreateEnemyInstance(std::string entity_name, std::string object_name, std::string material_name);
+
             // Create entire random asteroid field
             void CreateAsteroidField(int num_asteroids = 1500);
+			void CreateEnemies(int num_asteroids = 3);
+
 
     }; // class Game
 
