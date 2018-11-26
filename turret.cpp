@@ -2,10 +2,10 @@
 
 namespace game {
 
-Turret::Turret(const std::string name, ResourceManager* rm) : SceneNode(name + "Tower", rm->GetResource("TurTowerCube"), rm->GetResource("ObjectMaterial")) {
-	body_ = new SceneNode(name + "Body", rm->GetResource("TurBodyCylinder"), rm->GetResource("ObjectMaterial"));
-	lowerCannon_ = new SceneNode(name + "Lower", rm->GetResource("TurLowerCylinder"), rm->GetResource("ObjectMaterial"));
-	upperCannon_ = new SceneNode(name + "Upper", rm->GetResource("TurUpperCylinder"), rm->GetResource("ObjectMaterial"));
+Turret::Turret(const std::string name, ResourceManager* rm) : SceneNode(name + "Tower", rm->GetResource("TurTowerCube"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture")) {
+	body_ = new SceneNode(name + "Body", rm->GetResource("TurBodyCylinder"), rm->GetResource("ObjectMaterial"), rm->GetResource("DiceTexture"));
+	lowerCannon_ = new SceneNode(name + "Lower", rm->GetResource("TurLowerCylinder"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture"));
+	upperCannon_ = new SceneNode(name + "Upper", rm->GetResource("TurUpperCylinder"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture"));
 
 	this->AddChild(body_);
 	body_->AddChild(lowerCannon_);

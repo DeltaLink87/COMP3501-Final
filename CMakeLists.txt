@@ -8,6 +8,7 @@ set(HDRS
     asteroid.h 
 	camera.h 
 	game.h 
+	model_loader.h
 	resource.h 
 	resource_manager.h 
 	scene_graph.h 

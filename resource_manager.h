@@ -6,6 +6,7 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <SOIL/SOIL.h>
 
 #include "resource.h"
 
@@ -47,6 +48,8 @@ namespace game {
             // Methods to load specific types of resources
             // Load shaders programs
             void LoadMaterial(const std::string name, const char *prefix);
+			void LoadTexture(const std::string name, const char *filename);
+			void LoadMesh(const std::string name, const char *filename);
             // Load a text file into memory (could be source code)
             std::string LoadTextFile(const char *filename);
 

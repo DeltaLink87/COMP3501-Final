@@ -119,6 +119,17 @@ void Game::SetupResources(void){
     std::string filename = std::string(MATERIAL_DIRECTORY) + std::string("/material");
     resman_.LoadResource(Material, "ObjectMaterial", filename.c_str());
 
+	//Load texture
+
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/metal.png");
+	resman_.LoadResource(Texture, "MetalTexture", filename.c_str());
+
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/dice.png");
+	resman_.LoadResource(Texture, "DiceTexture", filename.c_str());
+
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/cube.obj");
+	resman_.LoadResource(Mesh, "CubeMesh", filename.c_str());
+
 	// Create a simple sphere to represent the asteroids
 	resman_.CreateCube("TurTowerCube");
 	resman_.CreateCylinder("TurBodyCylinder", 1, 0.8);
