@@ -21,7 +21,7 @@ namespace game {
 		void Fall();
 
 		void Update();
-
+		void GainPoint();
 		void fire();
 		void takeDamage();
 		void changeFireType(int type);

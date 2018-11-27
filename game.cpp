@@ -227,6 +227,7 @@ void Game::MainLoop(void){
 					scene_.RemoveNode(rmAttack->getSceneNode());
 
 					if (turrets_[j]->isDead == 0) {
+						player_->GainPoint();
 						turrets_[j]->isDead = -1;
 						turrets_.erase(turrets_.begin() + j);
 

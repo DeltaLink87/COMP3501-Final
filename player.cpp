@@ -44,6 +44,11 @@ namespace game {
 		this->Translate(glm::vec3(0, 2, 0));
 	}
 
+	void Player::GainPoint() {
+		points += 1;
+		std::printf("%d", points);
+	}
+
 	void Player::Fall() {
 		this->Translate(glm::vec3(0, -3, 0));
 	}
@@ -77,7 +82,7 @@ namespace game {
 
 	void Player::takeDamage() {
 		health -= 1;
-		std::printf("%d", health);
+		//std::printf("%d", health);
 
 		if (health <= 0) {
 			isDead = 0;
