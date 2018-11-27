@@ -46,7 +46,7 @@ namespace game {
 
 	void Player::GainPoint() {
 		points += 1;
-		std::printf("%d", points);
+		std::printf("Players Points is at: %d\n", points);
 	}
 
 	void Player::Fall() {
@@ -82,7 +82,7 @@ namespace game {
 
 	void Player::takeDamage() {
 		health -= 1;
-		//std::printf("%d", health);
+		std::printf("Players Health is at: %d\n", health);
 
 		if (health <= 0) {
 			isDead = 0;

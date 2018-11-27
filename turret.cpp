@@ -90,7 +90,7 @@ void Turret::Update() {
 
 void Turret::takeDamage() {
 	health -= 1;
-	//std::printf("%d", health);
+	std::printf("This Enemies Turret Health is: %d\n", health);
 	if (health <= 0) {
 		isDead = 0;
 	}
