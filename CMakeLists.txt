@@ -36,6 +36,9 @@ set(SRCS
 	attack.cpp
 	material_vp.glsl 
 	material_fp.glsl
+	UI_vp.glsl 
+	UI_fp.glsl
+
 
 )
 

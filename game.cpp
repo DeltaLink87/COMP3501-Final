@@ -25,7 +25,7 @@ glm::vec3 camera_position_g(0.0, 0.0, 800.0);
 glm::vec3 camera_look_at_g(0.0, 0.0, 0.0);
 glm::vec3 camera_up_g(0.0, 1.0, 0.0);
 
-// Materials 
+// Materials 1
 const std::string material_directory_g = MATERIAL_DIRECTORY;
 
 
@@ -132,6 +132,11 @@ void Game::SetupResources(void){
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/cube.obj");
 	resman_.LoadResource(Mesh, "CubeMesh", filename.c_str());
 
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/UI");
+	resman_.LoadResource(Material, "UI", filename.c_str());
+
+
+
 	// Create a simple sphere to represent the asteroids
 	resman_.CreateCube("TurTowerCube");
 	resman_.CreateCylinder("TurBodyCylinder", 1, 0.8);
@@ -143,6 +148,9 @@ void Game::SetupResources(void){
 	resman_.CreateCylinder("PlayerCylinder", 2, 0.5);
 
 	resman_.CreateCylinder("MissileCylinder", 1, 0.25);
+
+	scene_.SetupDrawToTexture();
+
 }
 
 
@@ -288,7 +296,11 @@ void Game::MainLoop(void){
 		else camera_.SetView(player_->GetPosition() + glm::vec3(0, 0, 1) * camRotation_ * player_->GetForward(), lookAt, upVec);
 
         // Draw the scene
-        scene_.Draw(&camera_);
+        //scene_.Draw(&camera_);
+		scene_.DrawToTexture(&camera_);
+
+
+		scene_.DisplayTexture(resman_.GetResource("UI")->GetResource());
 
         // Push buffer drawn in the background onto the display
         glfwSwapBuffers(window_);
