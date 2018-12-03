@@ -14,6 +14,7 @@
 #include "turret.h"
 #include "player.h"
 #include "world.h"
+#include "light_node.h"
 
 #include <iostream>
 
@@ -62,6 +63,8 @@ namespace game {
 			World* world;
 
 			Player* player_;
+
+			Light * mainLight_;
 
             // Flag to turn animation on/off
             bool animating_;

@@ -35,7 +35,7 @@ namespace game {
             glm::vec3 GetScale(void) const;
 
             // Set node attributes
-            void SetPosition(glm::vec3 position);
+            virtual void SetPosition(glm::vec3 position);
             void SetOrientation(glm::quat orientation);
 			void SetJointPos(glm::vec3 joint);
             void SetScale(glm::vec3 scale);
@@ -51,7 +51,7 @@ namespace game {
 			void SetParent(SceneNode *node);
 			SceneNode* GetParent();
 
-            // Draw the node according to scene parameters in 'camera'
+			// Draw the node according to scene parameters in 'camera'
             // variable
             virtual void Draw(Camera *camera);
 
@@ -67,7 +67,7 @@ namespace game {
 
 			glm::mat4 GetTransformations();
 
-        private:
+        protected:
             std::string name_; // Name of the scene node
             GLuint array_buffer_; // References to geometry: vertex and array buffers
             GLuint element_array_buffer_;
