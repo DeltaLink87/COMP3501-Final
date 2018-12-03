@@ -32,7 +32,7 @@ void main()
 
     gl_Position = vec4(position, 1.0);
 
-    //gl_Position = projection_mat * view_mat * world_mat * vec4(vertex, 1.0);
+   // gl_Position = projection_mat * view_mat * world_mat * vec4(vertex, 1.0) * vec4(position, 1.0);
 
     position_interp = vec3(view_mat * world_mat * vec4(vertex, 1.0));
     

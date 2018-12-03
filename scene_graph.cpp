@@ -268,4 +268,70 @@ void SceneGraph::SaveTexture(char *filename) {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void SceneGraph::ApplyTex(Resource *texture, glm::vec2 pos, glm::vec2 size, Resource *material){
+	// Set up frame buffer
+	glGenFramebuffers(1, &frame_buffer_);
+	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_);
+
+	// Set up target texture for rendering
+	glGenTextures(1, &texture_);
+	glBindTexture(GL_TEXTURE_2D, texture_);
+
+	// Set up an image for the texture
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	// Set up a depth buffer for rendering
+	glGenRenderbuffers(1, &depth_buffer_);
+	glBindRenderbuffer(GL_RENDERBUFFER, depth_buffer_);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
+
+	// Configure frame buffer (attach rendering buffers)
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture_, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_buffer_);
+	GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
+	glDrawBuffers(1, DrawBuffers);
+
+	// Check if frame buffer was setup successfully 
+	if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+		throw(std::ios_base::failure(std::string("Error setting up frame buffer")));
+	}
+
+	// Reset frame buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// Set up quad for drawing to the screen
+	static const GLfloat quad_vertex_data[] = {
+		-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+		1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+		1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+	};
+
+	// Create buffer for quad
+	glGenBuffers(1, &quad_array_buffer_);
+	glBindBuffer(GL_ARRAY_BUFFER, quad_array_buffer_);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertex_data), quad_vertex_data, GL_STATIC_DRAW);
+
+
+
+	// Save current viewport
+	GLint viewport[4];
+	glGetIntegerv(GL_VIEWPORT, viewport);
+
+	// Enable frame buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_);
+	glViewport(0, 0, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT);
+
+
+	// Reset frame buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// Restore viewport
+	glViewport(viewport[0], viewport[1], viewport[2], viewport[3]);
+
+}
 } // namespace game

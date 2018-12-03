@@ -126,6 +126,7 @@ void Game::SetupResources(void){
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/metal.png");
 	resman_.LoadResource(Texture, "MetalTexture", filename.c_str());
 
+
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/dice.png");
 	resman_.LoadResource(Texture, "DiceTexture", filename.c_str());
 
@@ -149,6 +150,7 @@ void Game::SetupResources(void){
 
 	resman_.CreateCylinder("MissileCylinder", 1, 0.25);
 
+
 	scene_.SetupDrawToTexture();
 
 }
@@ -163,6 +165,7 @@ void Game::SetupScene(void){
 	world->SetPosition(glm::vec3((world->getBounds()[0] + world->getBounds()[1]) / 2, world->getFloor() - 1.0, (world->getBounds()[4] + world->getBounds()[5]) / 2));
 	world->SetScale(glm::vec3(world->getBounds()[1] - world->getBounds()[0], 2, world->getBounds()[5] - world->getBounds()[4]));
 	scene_.AddNode(world);
+
 
 	player_ = new Player("Player", resman_.GetResource("PlayerCylinder"), resman_.GetResource("ObjectMaterial"));
 	player_->SetPosition(glm::vec3(0, 100, 150));
