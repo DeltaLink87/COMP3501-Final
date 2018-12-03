@@ -79,7 +79,7 @@ void Turret::Update() {
 	}
 
 
-	bounds = Bound(GetPosition() + glm::vec3(0, -0.5, 0) * GetScale(), GetPosition() + glm::vec3(0, 1.5, 0) * GetScale(), 0.96 * GetScale().x);
+	bounds = Bound(GetPosition() + glm::vec3(0, -1.5, 0) * GetScale(), GetPosition() + glm::vec3(0, 1.5, 0) * GetScale(), 0.96 * GetScale().x);
 	//bounds.setPositions(this->GetPosition() + glm::vec3(0, -0.5, 0) * this->GetScale(), this->GetPosition() + glm::vec3(0, 1.5, 0) * this->GetScale());
 	body_->SetOrientation(glm::angleAxis(turretRotation_, glm::vec3(0.0, 1.0, 0.0)));
 	lowerCannon_->SetOrientation(glm::angleAxis(cannonLevel_, glm::vec3(1.0, 0.0, 0.0)));

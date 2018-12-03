@@ -23,7 +23,7 @@ void Attack::Update() {
 		node->SetPosition(position);
 		node->SetOrientation(orientation);
 	}
-	bounds.setPositions(position + glm::vec3(0, 0.5, 0) * orientation, position + glm::vec3(0, -0.5, 0) * orientation);
+	bounds.setPositions(position + glm::vec3(0, 1, 0) * orientation, position + glm::vec3(0, -1, 0) * orientation);
 }
 
 SceneNode* Attack::createSceneNode(ResourceManager* resMan) {

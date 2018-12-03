@@ -45,7 +45,7 @@ void Game::Init(void){
     // Set variables
     animating_ = true;
 
-	thirdPerson_ = false;
+	thirdPerson_ = true;
 }
 
        
