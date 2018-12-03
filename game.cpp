@@ -160,6 +160,18 @@ void Game::SetupScene(void){
 	player_->SetPosition(glm::vec3(0, 100, 150));
 	scene_.AddNode(player_);
 
+	//We need to set up the number of lights uniform to initially zero.
+
+	std::string numLightsName = "numLights";
+	GLint numLightsIndex = glGetUniformLocation(resman_.GetResource("ObjectMaterial")->GetResource(), numLightsName.c_str());
+	glUniform1i(numLightsIndex, 0);
+
+	mainLight_ = new Light("main light", resman_.GetResource("PlayerCylinder"), resman_.GetResource("ObjectMaterial"));
+	mainLight_->SetPosition(glm::vec3(0, 100, 150));
+	mainLight_->SetSpecularColor(glm::vec3(1.0f, 1.0f, 0.5f));
+	mainLight_->SetRange(200.00);
+
+
     // Create asteroid field
     CreateAsteroidField();
 
@@ -168,7 +180,7 @@ void Game::SetupScene(void){
 
 
 void Game::MainLoop(void){
-
+	int direction = 1;
     // Loop while the user did not close the window
     while (!glfwWindowShouldClose(window_)){
         // Animate the scene
@@ -286,6 +298,16 @@ void Game::MainLoop(void){
 		if (thirdPerson_) 
 			camera_.SetView(player_->GetPosition() + glm::vec3(0, 5, -30) * camRotation_ * player_->GetForward(), lookAt, upVec);
 		else camera_.SetView(player_->GetPosition() + glm::vec3(0, 0, 1) * camRotation_ * player_->GetForward(), lookAt, upVec);
+
+		//mainLight_->SetPosition(mainLight_->GetPosition() + glm::vec3(glm::sin(glfwGetTime()), cos(glfwGetTime()), 0.0f));
+		//mainLight_->SetPosition(mainLight_->GetPosition() + glm::vec3(0.0, 50.0, 0.0));
+		if (mainLight_->GetRange() > 300) {
+			direction = -1;
+		}
+		else if (mainLight_->GetRange() < 100) {
+			direction = 1;
+		}
+		mainLight_->SetRange(mainLight_->GetRange() + (10 * direction));
 
         // Draw the scene
         scene_.Draw(&camera_);
