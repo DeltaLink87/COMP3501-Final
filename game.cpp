@@ -121,6 +121,7 @@ void Game::SetupResources(void){
     std::string filename = std::string(MATERIAL_DIRECTORY) + std::string("/material");
     resman_.LoadResource(Material, "ObjectMaterial", filename.c_str());
 
+
 	//Load texture
 
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/metal.png");
@@ -129,6 +130,10 @@ void Game::SetupResources(void){
 
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/rustyMetal.jpg");
 	resman_.LoadResource(Texture, "RustyMetal", filename.c_str());
+
+
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/glassTex.jpg");
+	resman_.LoadResource(Texture, "SubTex", filename.c_str());
 
 
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/dice.png");
@@ -140,9 +145,11 @@ void Game::SetupResources(void){
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/mine.obj");
 	resman_.LoadResource(Mesh, "MineMesh", filename.c_str());
 
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/Submarine.obj");
+	resman_.LoadResource(Mesh, "SubMesh", filename.c_str());
+
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/UI");
 	resman_.LoadResource(Material, "UI", filename.c_str());
-
 
 
 	// Create a simple sphere to represent the asteroids
@@ -174,7 +181,7 @@ void Game::SetupScene(void){
 	scene_.AddNode(world);
 
 
-	player_ = new Player("Player", resman_.GetResource("PlayerCylinder"), resman_.GetResource("ObjectMaterial"));
+	player_ = new Player("Player", resman_.GetResource("SubMesh"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("SubTex"));
 	player_->SetPosition(glm::vec3(0, 100, 150));
 	scene_.AddNode(player_);
 
