@@ -38,7 +38,8 @@ set(SRCS
 	attack.cpp
 	material_vp.glsl 
 	material_fp.glsl
-
+	skybox_fp.glsl
+	skybox_vp.glsl
 )
 
 # Add path name to configuration file

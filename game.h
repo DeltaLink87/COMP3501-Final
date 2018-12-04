@@ -66,6 +66,8 @@ namespace game {
 
 			Light * mainLight_;
 
+			SceneNode *skybox_;
+
             // Flag to turn animation on/off
             bool animating_;
 			bool thirdPerson_ = true;
