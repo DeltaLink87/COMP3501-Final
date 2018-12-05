@@ -121,10 +121,19 @@ void Game::SetupResources(void){
     std::string filename = std::string(MATERIAL_DIRECTORY) + std::string("/material");
     resman_.LoadResource(Material, "ObjectMaterial", filename.c_str());
 
+
 	//Load texture
 
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/metal.png");
 	resman_.LoadResource(Texture, "MetalTexture", filename.c_str());
+
+
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/rustyMetal.jpg");
+	resman_.LoadResource(Texture, "RustyMetal", filename.c_str());
+
+
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/glassTex.jpg");
+	resman_.LoadResource(Texture, "SubTex", filename.c_str());
 
 
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/dice.png");
@@ -133,9 +142,14 @@ void Game::SetupResources(void){
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/cube.obj");
 	resman_.LoadResource(Mesh, "CubeMesh", filename.c_str());
 
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/mine.obj");
+	resman_.LoadResource(Mesh, "MineMesh", filename.c_str());
+
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/Submarine.obj");
+	resman_.LoadResource(Mesh, "SubMesh", filename.c_str());
+
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/UI");
 	resman_.LoadResource(Material, "UI", filename.c_str());
-
 
 
 	// Create a simple sphere to represent the asteroids
@@ -167,7 +181,7 @@ void Game::SetupScene(void){
 	scene_.AddNode(world);
 
 
-	player_ = new Player("Player", resman_.GetResource("PlayerCylinder"), resman_.GetResource("ObjectMaterial"));
+	player_ = new Player("Player", resman_.GetResource("SubMesh"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("SubTex"));
 	player_->SetPosition(glm::vec3(0, 100, 150));
 	scene_.AddNode(player_);
 
@@ -433,7 +447,7 @@ Game::~Game(){
 }
 
 
-Asteroid *Game::CreateAsteroidInstance(std::string entity_name, std::string object_name, std::string material_name){
+Asteroid *Game::CreateAsteroidInstance(std::string entity_name, std::string object_name, std::string material_name, std::string texture_name){
 
     // Get resources
     Resource *geom = resman_.GetResource(object_name);
@@ -446,8 +460,15 @@ Asteroid *Game::CreateAsteroidInstance(std::string entity_name, std::string obje
         throw(GameException(std::string("Could not find resource \"")+material_name+std::string("\"")));
     }
 
+
+
+	Resource *tex = resman_.GetResource(texture_name);
+	if (!mat) {
+		throw(GameException(std::string("Could not find resource \"") + texture_name + std::string("\"")));
+	}
+
     // Create asteroid instance
-    Asteroid *ast = new Asteroid(entity_name, geom, mat);
+    Asteroid *ast = new Asteroid(entity_name, geom, mat,tex);
     scene_.AddNode(ast);
     return ast;
 }
@@ -464,11 +485,12 @@ void Game::CreateAsteroidField(int num_asteroids){
         std::string name = "AsteroidInstance" + index;
 
         // Create asteroid instance
-        Asteroid *ast = CreateAsteroidInstance(name, "SimpleSphereMesh", "ObjectMaterial");
+        Asteroid *ast = CreateAsteroidInstance(name, "MineMesh", "ObjectMaterial", "RustyMetal");
 		asteriods_.push_back(ast);
 
         // Set attributes of asteroid: random position, orientation, and
         // angular momentum
+		ast->SetScale(glm::vec3(3,3,3));
         ast->SetPosition(world->getRandomPosition());
         ast->SetOrientation(glm::normalize(glm::angleAxis(glm::pi<float>()*((float) rand() / RAND_MAX), glm::vec3(((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX)))));
         ast->SetAngM(glm::normalize(glm::angleAxis(0.05f*glm::pi<float>()*((float) rand() / RAND_MAX), glm::vec3(((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX), ((float) rand() / RAND_MAX)))));

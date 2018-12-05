@@ -8,7 +8,7 @@ namespace game {
 	class Player : public SceneNode
 	{
 	public:
-		Player(const std::string name, const Resource *geometry, const Resource *material);
+		Player(const std::string name, const Resource *geometry, const Resource *material, const Resource *texture);
 		~Player();
 
 		glm::quat GetForward();

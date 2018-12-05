@@ -19,7 +19,7 @@ void main()
 {
     // wavering
     vec2 pos = uv0;
-    pos.x = pos.x + 0.05*(sin(timer*1.0+2.0*pos.y));
+    pos.x = pos.x + 0.05*(sin(timer*0.0+0.0*pos.y));
 
     vec4 pixel = texture(texture_map, pos);
 
