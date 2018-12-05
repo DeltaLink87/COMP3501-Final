@@ -121,6 +121,10 @@ void Game::SetupResources(void){
     std::string filename = std::string(MATERIAL_DIRECTORY) + std::string("/material");
     resman_.LoadResource(Material, "ObjectMaterial", filename.c_str());
 
+	// Load material to be applied to skybox
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/skybox");
+	resman_.LoadResource(Material, "SkyboxMaterial", filename.c_str());
+
 
 	//Load texture
 
@@ -138,6 +142,10 @@ void Game::SetupResources(void){
 
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/dice.png");
 	resman_.LoadResource(Texture, "DiceTexture", filename.c_str());
+
+	// Load cube map to be applied to skybox
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/island/island.tga");
+	resman_.LoadResource(CubeMap, "LakeCubeMap", filename.c_str());
 
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/cube.obj");
 	resman_.LoadResource(Mesh, "CubeMesh", filename.c_str());
@@ -164,6 +172,14 @@ void Game::SetupResources(void){
 
 	resman_.CreateCylinder("MissileCylinder", 1, 0.25);
 
+	resman_.CreateSkybox("SkyboxMesh");
+
+
+
+	// Load material to be applied to skybox
+    filename = std::string(MATERIAL_DIRECTORY) + std::string("/skybox");
+    resman_.LoadResource(Material, "SkyboxMaterial", filename.c_str());
+
 
 	scene_.SetupDrawToTexture();
 
@@ -180,9 +196,9 @@ void Game::SetupScene(void){
 	world->SetScale(glm::vec3(world->getBounds()[1] - world->getBounds()[0], 2, world->getBounds()[5] - world->getBounds()[4]));
 	scene_.AddNode(world);
 
-
-	player_ = new Player("Player", resman_.GetResource("SubMesh"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("SubTex"));
+	player_ = new Player("Player", resman_.GetResource("SubTex"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("SubTex"), resman_.GetResource("LakeCubeMap"));
 	player_->SetPosition(glm::vec3(0, 100, 150));
+	player_->SetReflectivity(0.2f);
 	scene_.AddNode(player_);
 
 	//We need to set up the number of lights uniform to initially zero.
@@ -196,6 +212,8 @@ void Game::SetupScene(void){
 	mainLight_->SetSpecularColor(glm::vec3(1.0f, 1.0f, 0.5f));
 	mainLight_->SetRange(200.00);
 
+	skybox_ = new Skybox("Skybox", resman_.GetResource("SkyboxMesh"), resman_.GetResource("SkyboxMaterial"), resman_.GetResource("LakeCubeMap"), &camera_);
+	scene_.AddNode(skybox_);
 
     // Create asteroid field
     //CreateAsteroidField();
@@ -334,6 +352,7 @@ void Game::MainLoop(void){
 			direction = 1;
 		}
 		mainLight_->SetRange(mainLight_->GetRange() + (10 * direction));
+		//skybox_->SetPosition(camera_.GetPosition());
 
         // Draw the scene
         //scene_.Draw(&camera_);

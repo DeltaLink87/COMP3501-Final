@@ -50,6 +50,9 @@ void ResourceManager::LoadResource(ResourceType type, const std::string name, co
 	else if (type == Mesh) {
 		LoadMesh(name, filename);
 	}
+	else if (type == CubeMap) {
+		LoadCubeMap(name, filename);
+	}
 	else {
 		throw(std::invalid_argument(std::string("Invalid type of resource")));
 	}
@@ -736,6 +739,7 @@ void ResourceManager::CreateCylinder(std::string object_name, float height, floa
 }
 
 // Create the geometry of a cube centered at (0, 0, 0) with sides of length 1
+// This cube is used for multi-sided cubes where the sides unfold like a dice.
 void ResourceManager::CreateCube(std::string object_name, glm::vec3 color) {
 
 	// The construction does not use shared vertices, since we need to assign appropriate normals to each face to create sharp edges
@@ -812,6 +816,119 @@ void ResourceManager::CreateCube(std::string object_name, glm::vec3 color) {
 
 	// Create resource
 	AddResource(Mesh, object_name, vbo, ebo, sizeof(face) / sizeof(GLuint));
+}
+
+// Create the geometry for a cube centered at (0, 0, 0) with sides of length 1
+//For Skyboxing
+void ResourceManager::CreateSkybox(std::string object_name) {
+
+	// This construction uses shared vertices, following the same data
+	// format as the other functions 
+	// However, vertices are repeated since their normals at each face
+	// are different
+	// Each face of the cube is defined by four vertices (with the same normal) and two triangles
+
+	// Vertices used to build the cube
+	// 11 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3), texture coordinates (2)
+	GLfloat vertex[] = {
+		// First cube face 
+		-0.5, -0.5,  0.5,    0.0,  0.0,  1.0,    1.0, 0.0, 0.0,    0.0, 0.0,
+		 0.5, -0.5,  0.5,    0.0,  0.0,  1.0,    0.0, 1.0, 0.0,    1.0, 0.0,
+		 0.5,  0.5,  0.5,    0.0,  0.0,  1.0,    0.0, 0.0, 1.0,    1.0, 1.0,
+		-0.5,  0.5,  0.5,    0.0,  0.0,  1.0,    1.0, 0.0, 1.0,    0.0, 1.0,
+		// Second cube face
+		 0.5, -0.5, -0.5,    1.0,  0.0,  0.0,    1.0, 0.0, 0.0,    0.0, 0.0,
+		 0.5,  0.5, -0.5,    1.0,  0.0,  0.0,    0.0, 1.0, 0.0,    1.0, 0.0,
+		 0.5,  0.5,  0.5,    1.0,  0.0,  0.0,    0.0, 0.0, 1.0,    1.0, 1.0,
+		 0.5, -0.5,  0.5,    1.0,  0.0,  0.0,    1.0, 0.0, 1.0,    0.0, 1.0,
+		 // Third cube face
+		  0.5, -0.5, -0.5,    0.0,  0.0, -1.0,    1.0, 0.0, 0.0,    0.0, 0.0,
+		 -0.5, -0.5, -0.5,    0.0,  0.0, -1.0,    0.0, 1.0, 0.0,    1.0, 0.0,
+		 -0.5,  0.5, -0.5,    0.0,  0.0, -1.0,    0.0, 0.0, 1.0,    1.0, 1.0,
+		  0.5,  0.5, -0.5,    0.0,  0.0, -1.0,    1.0, 0.0, 1.0,    0.0, 1.0,
+		  // Fourth cube face
+		  -0.5,  0.5, -0.5,   -1.0,  0.0,  0.0,    1.0, 0.0, 0.0,    0.0, 0.0,
+		  -0.5, -0.5, -0.5,   -1.0,  0.0,  0.0,    0.0, 1.0, 0.0,    1.0, 0.0,
+		  -0.5, -0.5,  0.5,   -1.0,  0.0,  0.0,    0.0, 0.0, 1.0,    1.0, 1.0,
+		  -0.5,  0.5,  0.5,   -1.0,  0.0,  0.0,    1.0, 0.0, 1.0,    0.0, 1.0,
+		  // Fifth cube face
+		  -0.5,  0.5, -0.5,    0.0,  1.0,  0.0,    1.0, 0.0, 0.0,    0.0, 0.0,
+		  -0.5,  0.5,  0.5,    0.0,  1.0,  0.0,    0.0, 1.0, 0.0,    0.0, 1.0,
+		   0.5,  0.5,  0.5,    0.0,  1.0,  0.0,    0.0, 0.0, 1.0,    1.0, 1.0,
+		   0.5,  0.5, -0.5,    0.0,  1.0,  0.0,    1.0, 0.0, 1.0,    1.0, 0.0,
+		   // Sixth cube face
+			0.5, -0.5, -0.5,    0.0, -1.0,  0.0,    1.0, 0.0, 0.0,    0.0, 0.0,
+		   -0.5, -0.5, -0.5,    0.0, -1.0,  0.0,    0.0, 1.0, 0.0,    1.0, 0.0,
+		   -0.5, -0.5,  0.5,    0.0, -1.0,  0.0,    0.0, 0.0, 1.0,    1.0, 1.0,
+			0.5, -0.5,  0.5,    0.0, -1.0,  0.0,    1.0, 0.0, 1.0,    0.0, 1.0,
+	};
+
+	// Triangles
+	GLuint face[] = {
+		// First cube face, with two triangles
+		0, 1, 2,
+		0, 2, 3,
+		// Second face
+		4, 5, 6,
+		4, 6, 7,
+		// Third face
+		8, 9, 10,
+		8, 10, 11,
+		// Fourth face
+		12, 13, 14,
+		12, 14, 15,
+		// Fifth face
+		16, 17, 18,
+		16, 18, 19,
+		// Sixth face
+		20, 21, 22,
+		20, 22, 23,
+	};
+
+	// Create OpenGL buffers and copy data
+	GLuint vbo, ebo;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(face), face, GL_STATIC_DRAW);
+
+	// Create resource
+	AddResource(Mesh, object_name, vbo, ebo, sizeof(face) / sizeof(GLfloat));
+}
+
+
+void ResourceManager::LoadCubeMap(const std::string name, const char *filename) {
+
+	// Get base and extension of filename
+	std::string fn(filename);
+	int pos = fn.find(".");
+	std::string base = fn.substr(0, pos);
+	std::string ext = fn.substr(pos + 1);
+
+	// Create filenames of each individual cube face
+	std::string fn_xp = base + "_ft." + ext;
+	std::string fn_xn = base + "_bk." + ext;
+	std::string fn_yp = base + "_up." + ext;
+	std::string fn_yn = base + "_dn." + ext;
+	std::string fn_zp = base + "_rt." + ext;
+	std::string fn_zn = base + "_lf." + ext;
+
+	// Load cube map from file
+	
+	GLuint texture = SOIL_load_OGL_cubemap(fn_xp.c_str(), fn_xn.c_str(), fn_yp.c_str(), fn_yn.c_str(), fn_zp.c_str(), fn_zn.c_str(), SOIL_LOAD_RGB, SOIL_CREATE_NEW_ID, 0);
+	if (!texture) {
+		throw(std::ios_base::failure(std::string("Error loading cube map ") + std::string(base) + std::string("<spec>.") + std::string(ext) + std::string(": ") + std::string(SOIL_last_result())));
+	}
+
+	//Now we set GL_CLAMP_TO_EDGE to avoid line artifacts at the corners of the skybox.
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+	// Create resource
+	AddResource(CubeMap, name, texture, 0);
 }
 
 void string_trim(std::string str, std::string to_trim) {

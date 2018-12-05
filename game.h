@@ -17,6 +17,7 @@
 #include "player.h"
 #include "world.h"
 #include "light_node.h"
+#include "skybox.h"
 
 #include <iostream>
 
@@ -67,6 +68,8 @@ namespace game {
 			Player* player_;
 
 			Light * mainLight_;
+
+			SceneNode *skybox_;
 
             // Flag to turn animation on/off
             bool animating_;

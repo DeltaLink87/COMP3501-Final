@@ -40,7 +40,6 @@ void Camera::SetOrientation(glm::quat orientation){
     orientation_ = orientation;
 }
 
-
 void Camera::Translate(glm::vec3 trans){
 
     position_ += trans;

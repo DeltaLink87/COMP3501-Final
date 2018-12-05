@@ -3,6 +3,8 @@
 // Attributes passed from the vertex shader
 
 uniform int lightNum;
+uniform float reflectivity;
+uniform float roughness;
 
 in vec4 color_interp;
 in vec2 uv_interp;
@@ -44,10 +46,10 @@ vec3 ambient_color = specular_color*0.3;
 //vec3 specular_color = vec3(0.95, 0.64, 0.54);
 //vec3 ambient_color = specular_color*0.3;
 
-float roughness = 0.5;
 float light_intensity = 0.5*pi;
 
 uniform sampler2D texture_map;
+uniform samplerCube env_map;
 
 void illumination(in vec3 position, in vec3 normal, in vec3 lightPosition, in float range, in vec3 ambientColor, in vec3 diffuseColor, in vec3 specularColor, in float roughness, in float intensity, out vec3 illumination) 
 {
@@ -104,6 +106,16 @@ void illumination(in vec3 position, in vec3 normal, in vec3 lightPosition, in fl
 
     // Full illumination
     illumination = ambientColor + (diffuse + mfacet)*intensity*NL*rangeFalloffFactor;
+
+	// Compute indirect lighting
+	// Reflection vector
+	vec3 Lr = 2.0 * NL * N - L;
+	// Query environment map
+	vec4 il = texture(env_map, Lr);
+	// Add pixel value to the illumination
+	// Modulate influence of environment light by reflective surface value between 0 and 1
+	float reflectValue = max(0.0, min(1.0, reflectivity));
+	illumination += reflectValue*il.xyz;
 }
 
 void main() 
@@ -148,7 +160,10 @@ void main()
 			illumination(position_interp, normal_interp, light5_pos, light5Range, ambient_color, diffuse_color, light5Specular, roughness, light_intensity, illum5);
 		}
 
-		gl_FragColor = vec4(illum1 + illum2 + illum3 + illum4 + illum5, 1.0);
+		vec3 illum = illum1 + illum2 + illum3 + illum4 + illum5;
+
+		// Assign illumination to the fragment
+		gl_FragColor = vec4(illum, 1.0);
 	}
 
 }

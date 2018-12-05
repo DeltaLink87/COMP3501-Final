@@ -6,7 +6,6 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
-
 namespace game {
 
     // Abstraction of a camera

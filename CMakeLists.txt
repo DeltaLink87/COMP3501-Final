@@ -14,6 +14,7 @@ set(HDRS
 	resource_manager.h 
 	scene_graph.h 
 	scene_node.h 
+	skybox.h
 	player.h 
 	turret.h
 	world.h
@@ -40,6 +41,7 @@ set(SRCS
 	player.cpp 
 	turret.cpp 
 	world.cpp
+	skybox.cpp
 	bound.cpp
 	attack.cpp
 	enemy.cpp
@@ -52,8 +54,8 @@ set(SRCS
 	material_fp.glsl
 	UI_vp.glsl 
 	UI_fp.glsl
-
-
+	skybox_fp.glsl
+	skybox_vp.glsl
 )
 
 # Add path name to configuration file
