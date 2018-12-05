@@ -73,6 +73,8 @@ namespace game {
             // Update entire scene
             void Update(void);
 
+			void ApplyTex(Resource *texture, glm::vec2 pos, glm::vec2 size,  Resource *material);
+
     }; // class SceneGraph
 
 } // namespace game
