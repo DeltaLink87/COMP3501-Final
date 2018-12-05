@@ -20,7 +20,7 @@ namespace game {
 
         public:
             // Create scene node from given resources
-            SceneNode(const std::string name, const Resource *geometry, const Resource *material, const Resource *texture = NULL);
+            SceneNode(const std::string name, const Resource *geometry, const Resource *material, const Resource *texture = NULL, const Resource *envmap = NULL);
 
             // Destructor
             ~SceneNode();
@@ -39,6 +39,7 @@ namespace game {
             void SetOrientation(glm::quat orientation);
 			void SetJointPos(glm::vec3 joint);
             void SetScale(glm::vec3 scale);
+			void SetReflectivity(float reflectivity);
             
             // Perform transformations on node
             void Translate(glm::vec3 trans);
@@ -65,6 +66,8 @@ namespace game {
             GLsizei GetSize(void) const;
             GLuint GetMaterial(void) const;
 
+			float GetReflectivity();
+
 			glm::mat4 GetTransformations();
 
         protected:
@@ -75,11 +78,12 @@ namespace game {
             GLsizei size_; // Number of primitives in geometry
             GLuint material_; // Reference to shader program
 			GLuint texture_;
+			GLuint envmap_;
 			glm::vec3 position_; // Position of node
             glm::quat orientation_; // Orientation of node
 			glm::vec3 jointPos_;
             glm::vec3 scale_; // Scale of node
-
+			float reflectivity_;
 			// Scene nodes to render
 			SceneNode * parent_ = NULL;
 			std::vector<SceneNode *> children_;

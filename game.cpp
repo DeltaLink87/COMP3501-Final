@@ -173,8 +173,9 @@ void Game::SetupScene(void){
 	world->SetScale(glm::vec3(world->getBounds()[1] - world->getBounds()[0], 2, world->getBounds()[5] - world->getBounds()[4]));
 	scene_.AddNode(world);
 
-	player_ = new Player("Player", resman_.GetResource("PlayerCylinder"), resman_.GetResource("ObjectMaterial"));
+	player_ = new Player("Player", resman_.GetResource("PlayerCylinder"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("MetalTexture"), resman_.GetResource("LakeCubeMap"));
 	player_->SetPosition(glm::vec3(0, 100, 150));
+	player_->SetReflectivity(0.2f);
 	scene_.AddNode(player_);
 
 	//We need to set up the number of lights uniform to initially zero.
@@ -189,7 +190,7 @@ void Game::SetupScene(void){
 	mainLight_->SetRange(200.00);
 
 	skybox_ = new SceneNode("Skybox", resman_.GetResource("SkyboxMesh"), resman_.GetResource("SkyboxMaterial"), resman_.GetResource("LakeCubeMap"));
-	skybox_->Scale(glm::vec3(5.0, 5.0, 5.0));
+	skybox_->Scale(glm::vec3(50.0, 50.0, 50.0));
 	scene_.AddNode(skybox_);
 
     // Create asteroid field

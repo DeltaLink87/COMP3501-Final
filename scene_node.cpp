@@ -9,7 +9,7 @@
 
 namespace game {
 
-SceneNode::SceneNode(const std::string name, const Resource *geometry, const Resource *material, const Resource *texture){
+SceneNode::SceneNode(const std::string name, const Resource *geometry, const Resource *material, const Resource *texture, const Resource *envmap){
 
     // Set name of scene node
     name_ = name;
@@ -40,10 +40,18 @@ SceneNode::SceneNode(const std::string name, const Resource *geometry, const Res
 		texture_ = 0;
 	}
 
+	if (envmap) {
+		envmap_ = envmap->GetResource();
+	}
+	else {
+		envmap_ = 0;
+	}
+
     material_ = material->GetResource();
 
     // Other attributes
     scale_ = glm::vec3(1.0, 1.0, 1.0);
+	reflectivity_ = 0.0f;
 }
 
 
@@ -102,6 +110,11 @@ void SceneNode::SetScale(glm::vec3 scale){
     scale_ = scale;
 }
 
+void SceneNode::SetReflectivity(float reflectivity)
+{
+	reflectivity_ = reflectivity;
+}
+
 
 void SceneNode::Translate(glm::vec3 trans){
 
@@ -149,6 +162,11 @@ GLsizei SceneNode::GetSize(void) const {
 GLuint SceneNode::GetMaterial(void) const {
 
     return material_;
+}
+
+float SceneNode::GetReflectivity()
+{
+	return reflectivity_;
 }
 
 void SceneNode::AddChild(SceneNode *node) {
@@ -276,6 +294,25 @@ void SceneNode::SetupShader(GLuint program){
 		glGenerateMipmap(GL_TEXTURE_2D);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	}
+
+	GLint reflect_var = glGetUniformLocation(program, "reflectivity");
+	// Environment map
+	if (envmap_) {
+		GLint tex = glGetUniformLocation(program, "env_map");
+		glUniform1i(tex, 1); // Assign the first texture to the map
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, envmap_); // First texture we bind
+		// Define texture interpolation
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		glUniform1f(reflect_var, reflectivity_);
+	}
+	else {
+		//If we're not using the environment map, we set the reflectivity to zero.
+		glUniform1f(reflect_var, 0.0f);
 	}
 
     // Timer
