@@ -189,8 +189,7 @@ void Game::SetupScene(void){
 	mainLight_->SetSpecularColor(glm::vec3(1.0f, 1.0f, 0.5f));
 	mainLight_->SetRange(200.00);
 
-	skybox_ = new SceneNode("Skybox", resman_.GetResource("SkyboxMesh"), resman_.GetResource("SkyboxMaterial"), resman_.GetResource("LakeCubeMap"));
-	skybox_->Scale(glm::vec3(50.0, 50.0, 50.0));
+	skybox_ = new Skybox("Skybox", resman_.GetResource("SkyboxMesh"), resman_.GetResource("SkyboxMaterial"), resman_.GetResource("LakeCubeMap"), &camera_);
 	scene_.AddNode(skybox_);
 
     // Create asteroid field
@@ -329,7 +328,7 @@ void Game::MainLoop(void){
 			direction = 1;
 		}
 		mainLight_->SetRange(mainLight_->GetRange() + (10 * direction));
-		skybox_->SetPosition(camera_.GetPosition());
+		//skybox_->SetPosition(camera_.GetPosition());
 
         // Draw the scene
         scene_.Draw(&camera_);

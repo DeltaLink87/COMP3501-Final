@@ -15,6 +15,7 @@
 #include "player.h"
 #include "world.h"
 #include "light_node.h"
+#include "skybox.h"
 
 #include <iostream>
 

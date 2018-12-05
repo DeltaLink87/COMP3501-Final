@@ -4,6 +4,7 @@
 
 uniform int lightNum;
 uniform float reflectivity;
+uniform float roughness;
 
 in vec4 color_interp;
 in vec2 uv_interp;
@@ -45,7 +46,6 @@ vec3 ambient_color = specular_color*0.3;
 //vec3 specular_color = vec3(0.95, 0.64, 0.54);
 //vec3 ambient_color = specular_color*0.3;
 
-float roughness = 0.5;
 float light_intensity = 0.5*pi;
 
 uniform sampler2D texture_map;

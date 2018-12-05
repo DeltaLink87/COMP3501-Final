@@ -33,6 +33,8 @@ namespace game {
             glm::quat GetOrientation(void) const;
 			glm::vec3 GetJointPos(void) const;
             glm::vec3 GetScale(void) const;
+			float GetReflectivity();
+			float GetRoughness();
 
             // Set node attributes
             virtual void SetPosition(glm::vec3 position);
@@ -40,6 +42,7 @@ namespace game {
 			void SetJointPos(glm::vec3 joint);
             void SetScale(glm::vec3 scale);
 			void SetReflectivity(float reflectivity);
+			void SetRoughness(float roughness);
             
             // Perform transformations on node
             void Translate(glm::vec3 trans);
@@ -66,8 +69,6 @@ namespace game {
             GLsizei GetSize(void) const;
             GLuint GetMaterial(void) const;
 
-			float GetReflectivity();
-
 			glm::mat4 GetTransformations();
 
         protected:
@@ -84,6 +85,7 @@ namespace game {
 			glm::vec3 jointPos_;
             glm::vec3 scale_; // Scale of node
 			float reflectivity_;
+			float roughness_;
 			// Scene nodes to render
 			SceneNode * parent_ = NULL;
 			std::vector<SceneNode *> children_;

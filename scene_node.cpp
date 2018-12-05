@@ -52,6 +52,7 @@ SceneNode::SceneNode(const std::string name, const Resource *geometry, const Res
     // Other attributes
     scale_ = glm::vec3(1.0, 1.0, 1.0);
 	reflectivity_ = 0.0f;
+	roughness_ = 0.5f;
 }
 
 
@@ -115,6 +116,11 @@ void SceneNode::SetReflectivity(float reflectivity)
 	reflectivity_ = reflectivity;
 }
 
+void SceneNode::SetRoughness(float roughness)
+{
+	roughness_ = roughness;
+}
+
 
 void SceneNode::Translate(glm::vec3 trans){
 
@@ -167,6 +173,11 @@ GLuint SceneNode::GetMaterial(void) const {
 float SceneNode::GetReflectivity()
 {
 	return reflectivity_;
+}
+
+float SceneNode::GetRoughness()
+{
+	return roughness_;
 }
 
 void SceneNode::AddChild(SceneNode *node) {
@@ -319,6 +330,10 @@ void SceneNode::SetupShader(GLuint program){
     GLint timer_var = glGetUniformLocation(program, "timer");
     double current_time = glfwGetTime();
     glUniform1f(timer_var, (float) current_time);
+
+	//Roughness
+	GLint roughnessVar = glGetUniformLocation(program, "roughness");
+	glUniform1f(roughnessVar, roughness_);
 }
 
 } // namespace game;
