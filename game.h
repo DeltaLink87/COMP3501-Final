@@ -77,6 +77,7 @@ namespace game {
 
 			double prevMouseY = -999, prevMouseX = -999;
 			glm::quat camRotation_ = glm::angleAxis(0 / glm::pi<float>(), glm::vec3(0.0, 0.0, 1.0));
+			bool rotateCam = false;
 
 			std::vector<Attack *> attacks_;
 			std::vector<Enemy *> enemies_;
@@ -90,6 +91,7 @@ namespace game {
             // Methods to handle events
             static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 			static void MouseCallback(GLFWwindow* window, double x, double y);
+			static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mod);
 			static void MouseEnterCallback(GLFWwindow* window, int entered);
             static void ResizeCallback(GLFWwindow* window, int width, int height);
 

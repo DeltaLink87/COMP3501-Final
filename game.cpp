@@ -104,6 +104,7 @@ void Game::InitEventHandlers(void){
     // Set event callbacks
     glfwSetKeyCallback(window_, KeyCallback);
 	glfwSetCursorPosCallback(window_, MouseCallback);
+	glfwSetMouseButtonCallback(window_, MouseButtonCallback);
 	glfwSetCursorEnterCallback(window_, MouseEnterCallback);
     glfwSetFramebufferSizeCallback(window_, ResizeCallback);
 
@@ -196,7 +197,7 @@ void Game::SetupScene(void){
 	world->SetScale(glm::vec3(world->getBounds()[1] - world->getBounds()[0], 2, world->getBounds()[5] - world->getBounds()[4]));
 	scene_.AddNode(world);
 
-	player_ = new Player("Player", resman_.GetResource("SubTex"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("SubTex"), resman_.GetResource("LakeCubeMap"));
+	player_ = new Player("Player", resman_.GetResource("SubMesh"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("SubTex"), resman_.GetResource("LakeCubeMap"));
 	player_->SetPosition(glm::vec3(0, 100, 150));
 	player_->SetReflectivity(0.2f);
 	scene_.AddNode(player_);
@@ -218,7 +219,7 @@ void Game::SetupScene(void){
     // Create asteroid field
     //CreateAsteroidField();
 	CreateMineField();
-	CreateSubmarines(150);
+	CreateSubmarines(100);
 	CreateTowers();
 }
 
@@ -427,7 +428,7 @@ void Game::MouseCallback(GLFWwindow* window, double x, double y) {
 	void* ptr = glfwGetWindowUserPointer(window);
 	Game *game = (Game *)ptr;
 
-	if (game->prevMouseX != -999 && game->prevMouseY != -999) {
+	if (game->prevMouseX != -999 && game->prevMouseY != -999 && game->rotateCam) {
 		float horzRotation = ((game->prevMouseX - x) / 200.0) / glm::pi<float>();
 		float vertRotation = ((game->prevMouseY - y) / 200.0) / glm::pi<float>();
 		game->camRotation_ *= glm::angleAxis(horzRotation, game->camRotation_ * glm::vec3(0.0, 1.0, 0.0));
@@ -436,6 +437,17 @@ void Game::MouseCallback(GLFWwindow* window, double x, double y) {
 
 	game->prevMouseX = x;
 	game->prevMouseY = y;
+}
+
+void Game::MouseButtonCallback(GLFWwindow* window, int button, int action, int mod) {
+	// Get user data with a pointer to the game class
+	void* ptr = glfwGetWindowUserPointer(window);
+	Game *game = (Game *)ptr;
+
+	if (button == 0 && action == GLFW_PRESS)
+		game->rotateCam = true;
+	if (button == 0 && action == GLFW_RELEASE)
+		game->rotateCam = false;
 }
 
 void Game::MouseEnterCallback(GLFWwindow* window, int entered) {

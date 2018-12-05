@@ -20,7 +20,7 @@ SceneNode::SceneNode(const std::string name, const Resource *geometry, const Res
     } else if (geometry->GetType() == Mesh){
         mode_ = GL_TRIANGLES;
     } else {
-        throw(std::invalid_argument(std::string("Invalid type of geometry")));
+        throw(std::invalid_argument(std::string("Invalid type of geometry: " + name)));
     }
 
     array_buffer_ = geometry->GetArrayBuffer();
