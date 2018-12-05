@@ -16,6 +16,10 @@ void Bound::setPositions(glm::vec3 p1, glm::vec3 p2) {
 	this->p2 = p2;
 }
 
+void Bound::setBound(float bound) {
+	this->radius = bound;
+}
+
 bool Bound::intersects(const Bound other) {
 	const float SMALLNUM = 0.000000001;
 	glm::vec3 u = this->p2 - this->p1;

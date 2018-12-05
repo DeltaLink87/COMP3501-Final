@@ -21,7 +21,7 @@ namespace game {
 
         public:
             // Create asteroid from given resources
-			Attack(const std::string name, const std::string geoyName, const std::string resName);
+			Attack(const std::string name, const std::string geoyName, const std::string matName, const std::string texName = "");
 
             // Destructor
             ~Attack();
@@ -38,14 +38,17 @@ namespace game {
 			void SetMovment(glm::vec3 move);
 			void SetAcceleration(glm::vec3 acc);
 
+			int GetDamage();
+
 			glm::quat GetOrientation() const;
 
 			Bound getBounds() const;
-        private:
+        protected:
             // Angular momentum of asteroid
 			std::string name;
 			std::string geoName;
 			std::string matName;
+			std::string texName;
 			SceneNode* node = NULL;
 
 			Bound bounds = Bound(glm::vec3(), glm::vec3(), 1);
@@ -54,6 +57,8 @@ namespace game {
 			glm::quat orientation = glm::angleAxis(glm::pi<float>() * 0, glm::vec3(1.0, 0.0, 0.0));
 			glm::vec3 movement = glm::vec3(0, 0, 0);
 			glm::vec3 accelaration = glm::vec3(0, 0, 0);
+
+			int damage = 1;
 
     }; // class Asteroid
 

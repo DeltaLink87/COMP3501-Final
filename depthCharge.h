@@ -1,5 +1,5 @@
-#ifndef BOUND_H_
-#define BOUND_H_
+#ifndef DEPTHCHARGE_H_
+#define DEPTHCHARGE_H_
 
 #include <string>
 #define GLEW_STATIC
@@ -12,28 +12,21 @@
 #include "resource.h"
 #include "scene_node.h"
 #include "resource_manager.h"
+#include "bound.h"
+#include "attack.h"
 
 namespace game {
 
     // Abstraction of an asteroid
-    class Bound {
+    class DepthCharge : public Attack {
 
         public:
             // Create asteroid from given resources
-			Bound(glm::vec3 p1, glm::vec3 p2, float radius);
+			DepthCharge(const std::string name, glm::vec3 pos, glm::quat orientation);
 
             // Destructor
-            ~Bound();
+            ~DepthCharge();
             
-			void setPositions(glm::vec3 p1, glm::vec3 p2);
-			void setBound(float bound);
-
-			bool intersects(const Bound other);
-            
-        private:
-			glm::vec3 p1;
-			glm::vec3 p2;
-			float radius;
 
     }; // class Asteroid
 

@@ -181,8 +181,9 @@ void Game::SetupScene(void){
 
 
     // Create asteroid field
-    CreateAsteroidField();
-
+    //CreateAsteroidField();
+	CreateMineField();
+	CreateSubmarines(150);
 	CreateTowers();
 }
 
@@ -201,15 +202,13 @@ void Game::MainLoop(void){
             }
         }
 
-		Attack* newAttack = player_->getNewAttack();
-		if (newAttack) {
-			attacks_.push_back(newAttack);
-			SceneNode* newNode = newAttack->createSceneNode(&resman_);
-			scene_.AddNode(newNode);
+		//death checking 
+		if (player_->isDead()) {
+			scene_.RemoveNode(player_);
+			//return;
 		}
-
-		for (int i = 0; i < turrets_.size(); i++) {
-			Attack* newAttack = turrets_[i]->getNewAttack();
+		else {
+			Attack* newAttack = player_->getNewAttack();
 			if (newAttack) {
 				attacks_.push_back(newAttack);
 				SceneNode* newNode = newAttack->createSceneNode(&resman_);
@@ -217,46 +216,44 @@ void Game::MainLoop(void){
 			}
 		}
 
+		for (int i = 0; i < enemies_.size(); i++) {
+			Attack* newAttack = enemies_[i]->getNewAttack();
+			if (newAttack) {
+				attacks_.push_back(newAttack);
+				SceneNode* newNode = newAttack->createSceneNode(&resman_);
+				scene_.AddNode(newNode);
+			}
+
+			if (enemies_[i]->isDead()) {
+				Enemy* rmEnemy = enemies_[i];
+				player_->GainPoint();
+				enemies_.erase(enemies_.begin() + i);
+				scene_.RemoveNode(rmEnemy);
+				i--;
+			}
+		}
+
 		for (int i = 0; i < attacks_.size(); i++) {
 			attacks_[i]->Update();
 
-			if (attacks_[i]->getBounds().intersects(player_->getBounds())) {
+			if (!player_->isDead() && attacks_[i]->getBounds().intersects(player_->getBounds())) {
 				Attack* rmAttack = attacks_[i];
 				attacks_.erase(attacks_.begin() + i);
 				scene_.RemoveNode(rmAttack->getSceneNode());
-				player_->takeDamage();
-
-				//death checking 
-				if (player_->isDead == 0) {
-					scene_.RemoveNode(player_);
-					player_->isDead = -1;
-				}
-
+				player_->takeDamage(1);
 				i--;
 				continue;
 			}
 
 
-			for (int j = 0; j < turrets_.size(); j++) {
-				if (attacks_[i]->getBounds().intersects(turrets_[j]->getBounds())) {
+			for (int j = 0; j < enemies_.size(); j++) {
+				if (attacks_[i]->getBounds().intersects(enemies_[j]->getBounds())) {
 					Attack* rmAttack = attacks_[i];
-					Turret* rmTurret = turrets_[j];
 					attacks_.erase(attacks_.begin() + i);
 
-					turrets_[j]->takeDamage();
+					enemies_[j]->takeDamage(1);
 					scene_.RemoveNode(rmAttack->getSceneNode());
-
-					if (turrets_[j]->isDead == 0) {
-						player_->GainPoint();
-						turrets_[j]->isDead = -1;
-						turrets_.erase(turrets_.begin() + j);
-
-
-						scene_.RemoveNode(rmTurret);
-
-						i--; j--;
-						delete rmTurret;
-					}
+					i--;
 					delete rmAttack;
 
 					break;
@@ -301,11 +298,15 @@ void Game::MainLoop(void){
 			camera_.SetView(player_->GetPosition() + -30.0f * player_->GetForward() + glm::vec3(0, 5, 0), lookAt, upVec);
 		else camera_.SetView(player_->GetPosition() + player_->GetForward() * 2.0f, lookAt, upVec);*/
 
-		glm::vec3 lookAt = player_->GetPosition() + glm::vec3(0, 0, 50) * camRotation_ * player_->GetForward();
 		glm::vec3 upVec(0, 1, 0);
-		if (thirdPerson_) 
+		if (thirdPerson_) {
+			glm::vec3 lookAt = player_->GetPosition() + glm::vec3(0, 0, 50) * camRotation_ * player_->GetForward();
 			camera_.SetView(player_->GetPosition() + glm::vec3(0, 5, -30) * camRotation_ * player_->GetForward(), lookAt, upVec);
-		else camera_.SetView(player_->GetPosition() + glm::vec3(0, 0, 1) * camRotation_ * player_->GetForward(), lookAt, upVec);
+		}
+		else {
+			glm::vec3 lookAt = player_->GetPosition() + glm::vec3(0, 0, 50) * player_->GetForward();
+			camera_.SetView(player_->GetPosition() + glm::vec3(0, 0, 1) * player_->GetForward(), lookAt, upVec);
+		}
 
 		//mainLight_->SetPosition(mainLight_->GetPosition() + glm::vec3(glm::sin(glfwGetTime()), cos(glfwGetTime()), 0.0f));
 		//mainLight_->SetPosition(mainLight_->GetPosition() + glm::vec3(0.0, 50.0, 0.0));
@@ -393,8 +394,8 @@ void Game::MouseCallback(GLFWwindow* window, double x, double y) {
 	if (game->prevMouseX != -999 && game->prevMouseY != -999) {
 		float horzRotation = ((game->prevMouseX - x) / 200.0) / glm::pi<float>();
 		float vertRotation = ((game->prevMouseY - y) / 200.0) / glm::pi<float>();
-		game->camRotation_ *= glm::angleAxis(horzRotation, glm::vec3(0.0, 1.0, 0.0));
-		game->camRotation_ *= glm::angleAxis(vertRotation, glm::vec3(1.0, 0.0, 0.0));
+		game->camRotation_ *= glm::angleAxis(horzRotation, game->camRotation_ * glm::vec3(0.0, 1.0, 0.0));
+		game->camRotation_ *= glm::angleAxis(vertRotation, game->camRotation_ * glm::vec3(1.0, 0.0, 0.0));
 	}
 
 	game->prevMouseX = x;
@@ -471,6 +472,50 @@ void Game::CreateAsteroidField(int num_asteroids){
     }
 }
 
+void Game::CreateMineField(int num_mines) {
+
+	// Create a number of asteroid instances
+	for (int i = 0; i < num_mines; i++) {
+		// Create instance name
+		std::stringstream ss;
+		ss << i;
+		std::string index = ss.str();
+		std::string name = "MineInstance" + index;
+
+		// Create asteroid instance
+		Mine *mine = new Mine(name, &resman_);
+		enemies_.push_back(mine);
+		scene_.AddNode(mine);
+
+		// Set attributes of asteroid: random position, orientation, and
+		mine->setPlayer(player_);
+		mine->SetPosition(world->getRandomPosition());
+		mine->SetOrientation(glm::normalize(glm::angleAxis(glm::pi<float>()*((float)rand() / RAND_MAX), glm::vec3(((float)rand() / RAND_MAX), ((float)rand() / RAND_MAX), ((float)rand() / RAND_MAX)))));
+	}
+}
+
+void Game::CreateSubmarines(int num_subs) {
+
+	// Create a number of asteroid instances
+	for (int i = 0; i < num_subs; i++) {
+		// Create instance name
+		std::stringstream ss;
+		ss << i;
+		std::string index = ss.str();
+		std::string name = "SubInstance" + index;
+
+		// Create asteroid instance
+		Submarine *sub = new Submarine(name, &resman_);
+		enemies_.push_back(sub);
+		scene_.AddNode(sub);
+
+		// Set attributes of asteroid: random position, orientation, and
+		sub->setPlayer(player_);
+		sub->SetPosition(world->getRandomPosition());
+		sub->Rotate(glm::normalize(glm::angleAxis(glm::pi<float>()*((float)rand() / RAND_MAX), glm::vec3(0.0, 1.0, 0.0))));
+	}
+}
+
 void Game::CreateTowers(int num_towers) {
 	for (int i = 0; i < num_towers; i++) {
 		// Create instance name
@@ -484,7 +529,7 @@ void Game::CreateTowers(int num_towers) {
 		tower->setPlayer(player_);
 		tower->SetPosition(world->getRandomFloorPosition() + glm::vec3(0, 2, 0));
 		scene_.AddNode(tower);
-		turrets_.push_back(tower);
+		enemies_.push_back(tower);
 
 	}
 }

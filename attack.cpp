@@ -2,10 +2,11 @@
 
 namespace game {
 
-Attack::Attack(const std::string name, const std::string geoName, const std::string matName) {
+Attack::Attack(const std::string name, const std::string geoName, const std::string matName, const std::string texName) {
 	this->name = name;
 	this->geoName = geoName;
 	this->matName = matName;
+	this->texName = texName;
 }
 
 
@@ -30,7 +31,10 @@ SceneNode* Attack::createSceneNode(ResourceManager* resMan) {
 	if (node != NULL)
 		delete node;
 
-	node = new SceneNode(name, resMan->GetResource(geoName), resMan->GetResource(matName));
+	if (texName.compare("") == 0)
+		node = new SceneNode(name, resMan->GetResource(geoName), resMan->GetResource(matName));
+	else 
+		node = new SceneNode(name, resMan->GetResource(geoName), resMan->GetResource(matName), resMan->GetResource(texName));
 	node->SetPosition(position);
 	node->SetOrientation(orientation);
 
@@ -63,6 +67,10 @@ glm::quat Attack::GetOrientation() const {
 
 Bound Attack::getBounds() const {
 	return bounds;
+}
+
+int Attack::GetDamage() {
+	return damage;
 }
             
 } // namespace game

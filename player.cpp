@@ -1,4 +1,7 @@
 #include "player.h"
+#include "pulse.h"
+#include "torpedo.h"
+#include "depthCharge.h"
 
 namespace game {
 
@@ -7,7 +10,6 @@ namespace game {
 
 		health = 20;
 		points = 0;
-		isDead = 1;
 	}
 
 	Player::~Player() {}
@@ -18,14 +20,14 @@ namespace game {
 
 	void Player::Accelerate() {
 		speed_ += 0.1;
-		if (speed_ > 5)
-			speed_ = 5;
+		if (speed_ > 1)
+			speed_ = 1;
 	}
 
 	void Player::Deccelerate() {
 		speed_ -= 0.1;
-		if (speed_ < -1)
-			speed_ = -1;
+		if (speed_ < -0.5)
+			speed_ = -0.5;
 	}
 
 	void Player::RotateLeft() {
@@ -41,7 +43,7 @@ namespace game {
 	}
 
 	void Player::Rise() {
-		this->Translate(glm::vec3(0, 2, 0));
+		this->Translate(glm::vec3(0, 0.5, 0));
 	}
 
 	void Player::GainPoint() {
@@ -50,7 +52,7 @@ namespace game {
 	}
 
 	void Player::Fall() {
-		this->Translate(glm::vec3(0, -3, 0));
+		this->Translate(glm::vec3(0, -0.75, 0));
 	}
 
 	void Player::Update() {
@@ -63,16 +65,15 @@ namespace game {
 			delete attack;
 
 		if (fireType == 1) {
-			attack = new Attack("PlayerMissile", "MissileCylinder", "ObjectMaterial");
-			attack->SetPosition(GetPosition() + glm::vec3(0, 0, 1) * forward_);
-			attack->SetOrientation(glm::normalize(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
-			attack->SetMovment(glm::vec3(0, 0, 4) * forward_);
+			attack = new Pulse("PlayerPulse", GetPosition() + glm::vec3(0, 0, 4) * forward_, glm::vec3(0, 0, 4) * forward_,
+				glm::normalize(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
 		}
 		else if (fireType == 2) {
-			attack = new Attack("PlayerMine", "MissileCylinder", "ObjectMaterial");
-			attack->SetPosition(GetPosition() + glm::vec3(0, -3, 0));
-			attack->SetOrientation(glm::normalize(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
-			attack->SetAcceleration(glm::vec3(0, -0.01, 0));
+			attack = new DepthCharge("PlayerMine", GetPosition() + glm::vec3(0, -3, 0), glm::normalize(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
+		}
+		else if (fireType == 3) {
+			attack = new Torpedo("PlayerMissile", GetPosition() + glm::vec3(0, 0, 4) * forward_, glm::vec3(0, 0, 4) * forward_,
+				glm::normalize(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
 		}
 	}
 
@@ -80,13 +81,13 @@ namespace game {
 		fireType = type;
 	}
 
-	void Player::takeDamage() {
-		health -= 1;
+	void Player::takeDamage(int dmg) {
+		health -= dmg;
 		std::printf("Players Health is at: %d\n", health);
+	}
 
-		if (health <= 0) {
-			isDead = 0;
-		}
+	bool Player::isDead() {
+		return health <= 0;
 	}
 
 	Attack* Player::getNewAttack() {

@@ -12,6 +12,8 @@
 #include "camera.h"
 #include "asteroid.h"
 #include "turret.h"
+#include "mine.h"
+#include "submarine.h"
 #include "player.h"
 #include "world.h"
 #include "light_node.h"
@@ -74,7 +76,7 @@ namespace game {
 			glm::quat camRotation_ = glm::angleAxis(0 / glm::pi<float>(), glm::vec3(0.0, 0.0, 1.0));
 
 			std::vector<Attack *> attacks_;
-			std::vector<Turret *> turrets_;
+			std::vector<Enemy *> enemies_;
 			std::vector<Asteroid *> asteriods_;
 
             // Methods to initialize the game
@@ -93,6 +95,10 @@ namespace game {
             Asteroid *CreateAsteroidInstance(std::string entity_name, std::string object_name, std::string material_name);
             // Create entire random asteroid field
             void CreateAsteroidField(int num_asteroids = 1500);
+			// Create entire random mine field
+			void CreateMineField(int num_mines = 1500);
+			// Create entire random submarines
+			void CreateSubmarines(int num_subs = 1500);
 			// Create entire random towers
 			void CreateTowers(int num_towers = 10);
 

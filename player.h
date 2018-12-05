@@ -23,17 +23,17 @@ namespace game {
 		void Update();
 		void GainPoint();
 		void fire();
-		void takeDamage();
+		void takeDamage(int dmg);
 		void changeFireType(int type);
 		Attack* getNewAttack();
 		Bound getBounds() const;
-		int isDead = 1;
+		bool isDead();
 
 
 	private:
 		glm::quat forward_ = glm::angleAxis(0/glm::pi<float>(), glm::vec3(0.0, 0.0, 1.0));
 
-		float speed_ = 1;
+		float speed_ = .5;
 
 		int fireType = 1;
 

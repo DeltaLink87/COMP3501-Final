@@ -19,6 +19,12 @@ set(HDRS
 	world.h
 	bound.h
 	attack.h
+	enemy.h
+	mine.h
+	submarine.h
+	pulse.h
+	torpedo.h
+	depthCharge.h
 )
  
 set(SRCS
@@ -36,6 +42,12 @@ set(SRCS
 	world.cpp
 	bound.cpp
 	attack.cpp
+	enemy.cpp
+	mine.cpp
+	submarine.cpp
+	pulse.cpp
+	torpedo.cpp
+	depthCharge.cpp
 	material_vp.glsl 
 	material_fp.glsl
 	UI_vp.glsl 

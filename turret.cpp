@@ -4,7 +4,7 @@
 
 namespace game {
 
-Turret::Turret(const std::string name, ResourceManager* rm) : SceneNode(name + "Tower", rm->GetResource("TurTowerCube"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture")) {
+Turret::Turret(const std::string name, ResourceManager* rm) : Enemy(name + "Tower", rm->GetResource("TurTowerCube"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture")) {
 	body_ = new SceneNode(name + "Body", rm->GetResource("TurBodyCylinder"), rm->GetResource("ObjectMaterial"), rm->GetResource("DiceTexture"));
 	lowerCannon_ = new SceneNode(name + "Lower", rm->GetResource("TurLowerCylinder"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture"));
 	upperCannon_ = new SceneNode(name + "Upper", rm->GetResource("TurUpperCylinder"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture"));
@@ -22,10 +22,13 @@ Turret::Turret(const std::string name, ResourceManager* rm) : SceneNode(name + "
 
 
 	health = 10;
-	isDead = 1;
 }
 
-Turret::~Turret() {}
+Turret::~Turret() {
+	delete upperCannon_;
+	delete lowerCannon_;
+	delete body_;
+}
 
 
 void Turret::Update() {
@@ -79,35 +82,11 @@ void Turret::Update() {
 	}
 
 
-	bounds = Bound(GetPosition() + glm::vec3(0, -1.5, 0) * GetScale(), GetPosition() + glm::vec3(0, 1.5, 0) * GetScale(), 0.96 * GetScale().x);
+	bounds = Bound(GetPosition() + glm::vec3(0, -1.5, 0) * GetScale(), GetPosition() + glm::vec3(0, 1.5, 0) * GetScale(), 1.5 * GetScale().x);
 	//bounds.setPositions(this->GetPosition() + glm::vec3(0, -0.5, 0) * this->GetScale(), this->GetPosition() + glm::vec3(0, 1.5, 0) * this->GetScale());
 	body_->SetOrientation(glm::angleAxis(turretRotation_, glm::vec3(0.0, 1.0, 0.0)));
 	lowerCannon_->SetOrientation(glm::angleAxis(cannonLevel_, glm::vec3(1.0, 0.0, 0.0)));
 	upperCannon_->SetPosition(glm::vec3(0, cannonBarrelLength, 0.0));
-}
-
-
-
-void Turret::takeDamage() {
-	health -= 1;
-	std::printf("This Enemies Turret Health is: %d\n", health);
-	if (health <= 0) {
-		isDead = 0;
-	}
-}
-
-void Turret::setPlayer(Player* player) {
-	this->player = player;
-}
-
-Bound Turret::getBounds() const {
-	return bounds;
-}
-
-Attack* Turret::getNewAttack() {
-	Attack* usedAttack = this->attack;
-	this->attack = NULL;
-	return usedAttack;
 }
 
 }
