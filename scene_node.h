@@ -35,6 +35,7 @@ namespace game {
             glm::vec3 GetScale(void) const;
 			float GetReflectivity();
 			float GetRoughness();
+			bool GetBlending(void) const;
 
             // Set node attributes
             virtual void SetPosition(glm::vec3 position);
@@ -43,6 +44,7 @@ namespace game {
             void SetScale(glm::vec3 scale);
 			void SetReflectivity(float reflectivity);
 			void SetRoughness(float roughness);
+			void SetBlending(bool blending);
             
             // Perform transformations on node
             void Translate(glm::vec3 trans);
@@ -70,6 +72,7 @@ namespace game {
             GLuint GetMaterial(void) const;
 
 			glm::mat4 GetTransformations();
+			bool GetPleaseKill();
 
         protected:
             std::string name_; // Name of the scene node
@@ -89,9 +92,13 @@ namespace game {
 			// Scene nodes to render
 			SceneNode * parent_ = NULL;
 			std::vector<SceneNode *> children_;
+			bool blending_;
+
+			//This is used to signal to the scene graph that we should remove the node, because its job is done.
+			bool pleaseKill_;
 
             // Set matrices that transform the node in a shader program
-            void SetupShader(GLuint program);
+            virtual void SetupShader(GLuint program);
 
     }; // class SceneNode
 

@@ -103,10 +103,21 @@ void SceneGraph::Draw(Camera *camera){
 
 
 void SceneGraph::Update(void){
-
+	std::vector<SceneNode *> toRemove;
     for (int i = 0; i < roots_.size(); i++){
-		roots_[i]->Update();
+		if (roots_[i]->GetPleaseKill()) {
+			//If the node has marked itself for removal, we put it in a list of nodes to remove instead of updating it.
+			toRemove.push_back(roots_[i]);
+		}
+		else {
+			roots_[i]->Update();
+		}
     }
+
+	for (int i = 0; i < toRemove.size(); i++) {
+		//We remove the nodes that have marked themselves for removal.
+		RemoveNode(toRemove[i]);
+	}
 }
 
 
@@ -122,7 +133,7 @@ void SceneGraph::SetupDrawToTexture(void) {
 	glBindTexture(GL_TEXTURE_2D, texture_);
 
 	// Set up an image for the texture
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
@@ -278,7 +289,7 @@ void SceneGraph::ApplyTex(Resource *texture, glm::vec2 pos, glm::vec2 size, Reso
 	glBindTexture(GL_TEXTURE_2D, texture_);
 
 	// Set up an image for the texture
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, FRAME_BUFFER_WIDTH, FRAME_BUFFER_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
