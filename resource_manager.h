@@ -13,6 +13,7 @@
 // Default extensions for different shader source files
 #define VERTEX_PROGRAM_EXTENSION "_vp.glsl"
 #define FRAGMENT_PROGRAM_EXTENSION "_fp.glsl"
+#define GEOMETRY_PROGRAM_EXTENSION "_gp.glsl"
 
 namespace game {
 
@@ -42,6 +43,9 @@ namespace game {
 			void CreateCube(std::string object_name, glm::vec3 color = glm::vec3(-1, -1, -1));
 			void CreateSkybox(std::string object_name);
 			void LoadCubeMap(const std::string name, const char *filename);
+			void CreateSphereParticles(std::string object_name, int num_particles = 20000);
+			void CreateTorusParticles(std::string object_name, int num_particles = 20000, float loop_radius = 0.6, float circle_radius = 0.2);
+			void CreateParticleCluster(std::string object_name, int num_particles = 20000);
 
         private:
             // List storing all resources

@@ -144,6 +144,12 @@ void Game::SetupResources(void){
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/dice.png");
 	resman_.LoadResource(Texture, "DiceTexture", filename.c_str());
 
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/fire.png");
+	resman_.LoadResource(Texture, "FireTexture", filename.c_str());
+
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/bubble.png");
+	resman_.LoadResource(Texture, "BubbleTexture", filename.c_str());
+
 	// Load cube map to be applied to skybox
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/island/island.tga");
 	resman_.LoadResource(CubeMap, "LakeCubeMap", filename.c_str());
@@ -160,6 +166,15 @@ void Game::SetupResources(void){
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/UI");
 	resman_.LoadResource(Material, "UI", filename.c_str());
 
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/particle");
+	resman_.LoadResource(Material, "ParticleMaterial", filename.c_str());
+
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/explosion");
+	resman_.LoadResource(Material, "ExplosionMaterial", filename.c_str());
+
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/bubbles");
+	resman_.LoadResource(Material, "BubblesMaterial", filename.c_str());
+
 
 	// Create a simple sphere to represent the asteroids
 	resman_.CreateCube("TurTowerCube");
@@ -175,7 +190,11 @@ void Game::SetupResources(void){
 
 	resman_.CreateSkybox("SkyboxMesh");
 
+	resman_.CreateSphereParticles("SphereParticles");
 
+	resman_.CreateParticleCluster("ParticleCluster");
+
+	resman_.CreateParticleCluster("BubbleCluster", 50);
 
 	// Load material to be applied to skybox
     filename = std::string(MATERIAL_DIRECTORY) + std::string("/skybox");
@@ -406,11 +425,18 @@ void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, in
     if (key == GLFW_KEY_LEFT_SHIFT){
 		game->player_->Rise();
     }
-    if (key == GLFW_KEY_LEFT_CONTROL){
-		game->player_->Fall();
+    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS){
+		//game->player_->Fall();
+		ParticleFountain * bubbles = (ParticleFountain *)game->scene_.GetNode("Bubbles");
+		bubbles->StopFountain();
     }
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		game->player_->fire();
+		ParticleFountain * bubbles = new ParticleFountain("Bubbles", game->resman_.GetResource("BubbleCluster"), game->resman_.GetResource("BubblesMaterial"), game->resman_.GetResource("BubbleTexture"), 1.0f);
+		bubbles->SetPosition(game->player_->GetPosition());
+		bubbles->SetScale(glm::vec3(10.0f, 10.0, 10.0));
+		bubbles->SetBlending(true);
+		game->scene_.AddNode(bubbles);
 	}
 	if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
 		game->player_->changeFireType(1);

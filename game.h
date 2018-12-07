@@ -18,6 +18,8 @@
 #include "world.h"
 #include "light_node.h"
 #include "skybox.h"
+#include "particle_system.h"
+#include "particle_fountain.h"
 
 #include <iostream>
 

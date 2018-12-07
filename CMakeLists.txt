@@ -14,6 +14,8 @@ set(HDRS
 	resource_manager.h 
 	scene_graph.h 
 	scene_node.h 
+	particle_system.h
+	particle_fountain.h
 	skybox.h
 	player.h 
 	turret.h
@@ -38,6 +40,8 @@ set(SRCS
 	resource_manager.cpp 
 	scene_graph.cpp 
 	scene_node.cpp 
+	particle_system.cpp
+	particle_fountain.cpp
 	player.cpp 
 	turret.cpp 
 	world.cpp
@@ -52,10 +56,25 @@ set(SRCS
 	depthCharge.cpp
 	material_vp.glsl 
 	material_fp.glsl
+	particle_vp.glsl
+	particle_gp.glsl
+	particle_fp.glsl
 	UI_vp.glsl 
 	UI_fp.glsl
 	skybox_fp.glsl
 	skybox_vp.glsl
+	explosion_vp.glsl
+	explosion_gp.glsl
+	explosion_fp.glsl
+	pulse_vp.glsl
+	pulse_gp.glsl
+	pulse_fp.glsl
+	bubbles_vp.glsl
+	bubbles_gp.glsl
+	bubbles_fp.glsl
+	trail_vp.glsl
+	trail_gp.glsl
+	trail_fp.glsl
 )
 
 # Add path name to configuration file
