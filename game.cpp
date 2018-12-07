@@ -132,6 +132,10 @@ void Game::SetupResources(void){
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/metal.png");
 	resman_.LoadResource(Texture, "MetalTexture", filename.c_str());
 
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/EnemyTex.jpg");
+	resman_.LoadResource(Texture, "enemyTex", filename.c_str());
+
+
 
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/rustyMetal.jpg");
 	resman_.LoadResource(Texture, "RustyMetal", filename.c_str());
@@ -159,6 +163,10 @@ void Game::SetupResources(void){
 
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/proppellor.obj");
 	resman_.LoadResource(Mesh, "PropellerMesh", filename.c_str());
+
+
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/Enemy.obj");
+	resman_.LoadResource(Mesh, "enemyMesh", filename.c_str());
 
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/UI");
 	resman_.LoadResource(Material, "UI", filename.c_str());
