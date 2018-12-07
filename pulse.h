@@ -14,6 +14,7 @@
 #include "resource_manager.h"
 #include "bound.h"
 #include "attack.h"
+#include "particle_fountain.h"
 
 namespace game {
 
@@ -27,7 +28,7 @@ namespace game {
             // Destructor
             ~Pulse();
             
-
+			SceneNode* createSceneNode(ResourceManager* resMan);
     }; // class Asteroid
 
 } // namespace game

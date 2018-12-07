@@ -21,7 +21,6 @@ namespace game {
 		SceneNode* body_;
 		SceneNode* lowerCannon_;
 		SceneNode* upperCannon_;
-
 		float turretRotation_ = 0;
 		float cannonLevel_ = glm::pi<float>() / 2.0f;
 		float cannonBarrelLength = 0;

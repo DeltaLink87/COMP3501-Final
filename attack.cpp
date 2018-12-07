@@ -35,18 +35,32 @@ SceneNode* Attack::createSceneNode(ResourceManager* resMan) {
 	if (node != NULL)
 		delete node;
 
-	if (texName.compare("") == 0)
+	if (texName.compare(""))
 		node = new SceneNode(name, resMan->GetResource(geoName), resMan->GetResource(matName));
-	else 
-		node = new SceneNode(name, resMan->GetResource(geoName), resMan->GetResource(matName), resMan->GetResource(texName));
+	else node = new SceneNode(name, resMan->GetResource(geoName), resMan->GetResource(matName), resMan->GetResource(texName));
 	node->SetPosition(position);
 	node->SetOrientation(orientation);
+
+
+
+	forwardBound = new SceneNode("forBound", resMan->GetResource("TurTowerCube"), resMan->GetResource("ObjectMaterial"));
+	forwardBound->SetScale(glm::vec3(3, 1, 3));
+	forwardBound->SetPosition(glm::vec3(0, 4, 0));
+	node->AddChild(forwardBound);
+	backBound = new SceneNode("backBound", resMan->GetResource("TurTowerCube"), resMan->GetResource("ObjectMaterial"));
+	backBound->SetScale(glm::vec3(3, 1, 3));
+	backBound->SetPosition(glm::vec3(0, 2, 0));
+	node->AddChild(backBound);
 
 	return node;
 }
 
 SceneNode* Attack::getSceneNode() {
 	return node;
+}
+
+ParticleSystem* Attack::hitParticles(ResourceManager* resMan) {
+	return NULL;
 }
 
 void Attack::SetPosition(glm::vec3 position) {

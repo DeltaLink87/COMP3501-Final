@@ -22,12 +22,30 @@ void Mine::Update() {
 	bounds.setPositions(GetPosition() + glm::vec3(0, 0.05, 0), GetPosition() + glm::vec3(0, -0.05, 0));
 	if (player) {
 		if (player->getBounds().intersects(bounds)) {
-			attack = new Attack("MineExplosion", "SimpleSphereMesh", "ObjectMaterial");
-			attack->SetPosition(GetPosition());
+			attack = new MineAttack("MineExplosion", GetPosition());
 			attack->SetDamage(4);
 			health = 0;
 		}
 	}
+}
+
+MineAttack::MineAttack(const std::string name, glm::vec3 pos) : Attack(name, "SimpleSphereMesh", "ObjectMaterial", "FireTexture") {
+	this->SetPosition(pos);
+	bounds = Bound(position + glm::vec3(0, -0.0001, 0), position + glm::vec3(0, 0.0001, 0), 2);
+}
+
+MineAttack::~MineAttack() {}
+
+void MineAttack::UpdateBounds() {
+	bounds.setPositions(position + glm::vec3(0, -0.0001, 0), position + glm::vec3(0, 0.0001, 0));
+}
+
+ParticleSystem* MineAttack::hitParticles(ResourceManager* resMan) {
+	ParticleSystem* p = new ParticleSystem(name + "Explosion", resMan->GetResource("BubbleCluster"), resMan->GetResource("ExplosionMaterial"), resMan->GetResource("FireTexture"), 1.0f);
+	p->SetBlending(true);
+	//p->SetScale(glm::vec3(10, 10, 10));
+	p->SetPosition(position + glm::vec3(0, 2, 0) * orientation);
+	return p;
 }
 
 }

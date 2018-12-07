@@ -31,6 +31,7 @@ namespace game {
 
 			SceneNode* createSceneNode(ResourceManager* resMan);
             
+			ParticleSystem* hitParticles(ResourceManager* resMan);
 
     }; // class Asteroid
 

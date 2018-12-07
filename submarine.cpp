@@ -1,17 +1,20 @@
 #include "submarine.h"
 #include <math.h>
 #include <iostream>
+#include "torpedo.h"
 
 namespace game {
 
 Submarine::Submarine(const std::string name, ResourceManager* rm) : Enemy(name + "Submarine", rm->GetResource("EnemySubMesh"), rm->GetResource("ObjectMaterial"), rm->GetResource("enemyTex")) {
 	this->SetOrientation(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0)));
+	this->SetScale(glm::vec3(0.5, 0.5, 0.5));
 	bounds = Bound(glm::vec3(), glm::vec3(), 2 * 0.5);
 	this->SetRoughness(0.25f);
 
 	propeller_ = new SceneNode(name + "Propeller", rm->GetResource("PropellerMesh"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture"));
 	propeller_->SetJointPos(glm::vec3(-0.1025, 0.0, -0.1425));
 	this->AddChild(propeller_);
+
 
 	health = 2;
 }
@@ -24,8 +27,8 @@ Submarine::~Submarine() {
 void Submarine::Update() {
 	float prevRotation = subRotation_;
 	if (player == NULL) {
-		subRotation_ += glm::pi<float>() / 180.0f;
-		if (speed < 0.75);
+		subRotation_ += glm::pi<float>() / 18.0f;
+		if (speed < 0.25);
 			speed += 0.05;
 	}
 	else {
@@ -50,13 +53,13 @@ void Submarine::Update() {
 				this->Translate(glm::vec3(0.0, subHeightDif, 0.0));
 
 			if (subHeightDif < 0.5 && subHeightDif > -0.5 && subRotDif < 0.05 && subRotDif > -0.05 && coolDown <= 0) {
-				attack = new Attack("PlayerMissile", "MissileCylinder", "ObjectMaterial");
-				attack->SetOrientation(glm::normalize(glm::angleAxis(subRotation_, glm::vec3(0.0, 1.0, 0.0)) * glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0))));
-				glm::vec3 attDirRelToSub = glm::vec3(0.0, 0.0, 2.0) * glm::angleAxis(-subRotation_, glm::vec3(0.0, 1.0, 0.0));
+				glm::vec3 attDirRelToSub = glm::vec3(0.0, 0.0, 10.0) * GetScale() * glm::angleAxis(-subRotation_, glm::vec3(0.0, 1.0, 0.0));
 				
-				attack->SetPosition(GetPosition() + attDirRelToSub);
 				glm::vec3 attackPosToPlayer = glm::normalize(playerPos - (GetPosition() + attDirRelToSub));
-				attack->SetMovment(glm::normalize(attackPosToPlayer) * 2.0f);
+
+				attack = new Torpedo("EnemyMissile", GetPosition() + attDirRelToSub, glm::normalize(attackPosToPlayer) * 2.0f,
+					glm::normalize(glm::angleAxis(subRotation_, glm::vec3(0.0, 1.0, 0.0)) * glm::angleAxis(-glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0))));
+				attack->SetDamage(1);
 				coolDown = 120;
 			}
 
@@ -75,8 +78,8 @@ void Submarine::Update() {
 	this->SetOrientation(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0)) * glm::angleAxis(-subRotation_, glm::vec3(0.0, 0.0, 1.0)));
 	this->Translate(glm::normalize(glm::angleAxis(subRotation_, glm::vec3(0.0, 1.0, 0.0)) * glm::vec3(0.0, 0.0, 1.0)) * speed);
 
-	bounds = Bound(GetPosition() + glm::vec3(0, -1.5, 0) * GetScale(), GetPosition() + glm::vec3(0, 1.5, 0) * GetScale(), 1.5 * GetScale().x);
-	bounds.setPositions(GetPosition() + (glm::vec3(0, 0, 7.5) * GetScale()) * glm::angleAxis(subRotation_, glm::vec3(0.0, 1.0, 0.0)) * GetScale(), GetPosition());
+	bounds = Bound(GetPosition() + glm::vec3(0, 7.0, 0) * GetOrientation() * GetScale(), GetPosition(), 1.5 * GetScale().x);
+	bounds.setPositions(GetPosition() + glm::vec3(0, -7.0, 0) * GetOrientation() * GetScale(), GetPosition());
 
 	propeller_->Rotate(glm::angleAxis(glm::pi<float>() / 4, glm::vec3(0.0, 1.0, 0.0)));
 }

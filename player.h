@@ -3,6 +3,7 @@
 
 #include "scene_node.h"
 #include "attack.h"
+#include "particle_fountain.h"
 
 namespace game {
 	class Player : public SceneNode
@@ -32,6 +33,9 @@ namespace game {
 
 	private:
 		SceneNode* propeller_;
+		ParticleFountain* particleTrail;
+
+
 
 		glm::quat forward_ = glm::angleAxis(0/glm::pi<float>(), glm::vec3(0.0, 0.0, 1.0));
 

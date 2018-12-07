@@ -26,8 +26,10 @@ namespace game {
 
             // Destructor
             ~Torpedo();
-            
 
+			void UpdateBounds();
+            
+			ParticleSystem* hitParticles(ResourceManager* resMan);
     }; // class Asteroid
 
 } // namespace game

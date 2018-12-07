@@ -14,12 +14,18 @@ namespace game {
 		propeller_->SetJointPos(glm::vec3(-0.1025, 0.0, -0.1425));
 		this->AddChild(propeller_);
 
+		/*particleTrail = new ParticleFountain("PlayerSubTrail", rm->GetResource("BubbleCluster"), rm->GetResource("BubblesMaterial"), rm->GetResource("BubbleTexture"), 1.0f);
+		particleTrail->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
+		particleTrail->SetBlending(true);
+		this->AddChild(particleTrail);*/
+
 		health = 20;
 		points = 0;
 	}
 
 	Player::~Player() {
 		delete propeller_;
+		delete particleTrail;
 	}
 
 	glm::quat Player::GetForward() {
@@ -65,7 +71,7 @@ namespace game {
 
 	void Player::Update() {
 		this->Translate(glm::vec3(0, 0, speed_) * forward_);
-		bounds.setPositions(GetPosition() + (glm::vec3(0, 0, 7.5) * GetScale()) * forward_ * GetScale(), GetPosition());
+		bounds.setPositions(GetPosition() + glm::vec3(0, -7.0, 0) * GetOrientation() * GetScale(), GetPosition());
 		propeller_->Rotate(glm::angleAxis(glm::pi<float>() * (speed_ * 0.25f), glm::vec3(0.0, 1.0, 0.0)));
 	}
 
@@ -78,11 +84,11 @@ namespace game {
 				glm::normalize(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
 		}
 		else if (fireType == 2) {
-			attack = new DepthCharge("PlayerMine", GetPosition() + (glm::vec3(0, -2, 0) * GetScale()), glm::normalize(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
+			attack = new DepthCharge("PlayerMine", GetPosition() + (glm::vec3(0, -2, 0) * GetScale()), glm::normalize(glm::angleAxis(0.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
 		}
 		else if (fireType == 3) {
 			attack = new Torpedo("PlayerMissile", GetPosition() + (glm::vec3(0, 0, 9.5) * GetScale()) * forward_, glm::vec3(0, 0, 4) * forward_,
-				glm::normalize(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
+				glm::normalize(glm::angleAxis(-glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
 		}
 	}
 

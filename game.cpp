@@ -135,6 +135,9 @@ void Game::SetupResources(void){
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/EnemyTex.jpg");
 	resman_.LoadResource(Texture, "enemyTex", filename.c_str());
 
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/torpedoTex.png");
+	resman_.LoadResource(Texture, "TorpedoTex", filename.c_str());
+
 
 
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/rustyMetal.jpg");
@@ -169,6 +172,9 @@ void Game::SetupResources(void){
 
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/Enemy.obj");
 	resman_.LoadResource(Mesh, "EnemySubMesh", filename.c_str());
+
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/torpedo.obj");
+	resman_.LoadResource(Mesh, "TorpedoMesh", filename.c_str());
 
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/proppellor.obj");
 	resman_.LoadResource(Mesh, "PropellerMesh", filename.c_str());
@@ -310,7 +316,13 @@ void Game::MainLoop(void){
 				attacks_.erase(attacks_.begin() + i);
 				scene_.RemoveNode(rmAttack->getSceneNode());
 				player_->takeDamage(1);
+
+				SceneNode* particles = rmAttack->hitParticles(&resman_);
+				if (particles)
+					scene_.AddNode(particles);
+
 				i--;
+				delete rmAttack;
 				continue;
 			}
 
@@ -322,6 +334,11 @@ void Game::MainLoop(void){
 
 					enemies_[j]->takeDamage(1);
 					scene_.RemoveNode(rmAttack->getSceneNode());
+
+					SceneNode* particles = rmAttack->hitParticles(&resman_);
+					if (particles) 
+						scene_.AddNode(particles);
+
 					i--;
 					delete rmAttack;
 
@@ -440,18 +457,13 @@ void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, in
     if (key == GLFW_KEY_LEFT_SHIFT){
 		game->player_->Rise();
     }
-    if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS){
-		//game->player_->Fall();
-		ParticleFountain * bubbles = (ParticleFountain *)game->scene_.GetNode("Bubbles");
-		bubbles->StopFountain();
+    if (key == GLFW_KEY_LEFT_CONTROL/* && action == GLFW_PRESS*/){
+		game->player_->Fall();
+		//ParticleFountain * bubbles = (ParticleFountain *)game->scene_.GetNode("Bubbles");
+		//bubbles->StopFountain();
     }
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		game->player_->fire();
-		ParticleFountain * bubbles = new ParticleFountain("Bubbles", game->resman_.GetResource("BubbleCluster"), game->resman_.GetResource("BubblesMaterial"), game->resman_.GetResource("BubbleTexture"), 1.0f);
-		bubbles->SetPosition(game->player_->GetPosition());
-		bubbles->SetScale(glm::vec3(10.0f, 10.0, 10.0));
-		bubbles->SetBlending(true);
-		game->scene_.AddNode(bubbles);
 	}
 	if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
 		game->player_->changeFireType(1);

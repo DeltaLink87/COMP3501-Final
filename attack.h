@@ -12,6 +12,7 @@
 #include "resource.h"
 #include "scene_node.h"
 #include "resource_manager.h"
+#include "particle_system.h"
 #include "bound.h"
 
 namespace game {
@@ -34,6 +35,8 @@ namespace game {
 			virtual SceneNode* createSceneNode(ResourceManager* resMan);
 			SceneNode* getSceneNode();
 
+			virtual ParticleSystem* hitParticles(ResourceManager* resMan);
+
 			void SetPosition(glm::vec3 position);
 			void SetOrientation(glm::quat orientation);
 			void SetMovment(glm::vec3 move);
@@ -52,6 +55,9 @@ namespace game {
 			std::string matName;
 			std::string texName;
 			SceneNode* node = NULL;
+
+			SceneNode* forwardBound;
+			SceneNode* backBound;
 
 			Bound bounds = Bound(glm::vec3(), glm::vec3(), 1);
 

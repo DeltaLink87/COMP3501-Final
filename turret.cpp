@@ -1,6 +1,7 @@
 #include "turret.h"
 #include <math.h>
 #include <iostream>
+#include "torpedo.h"
 
 namespace game {
 
@@ -19,7 +20,6 @@ Turret::Turret(const std::string name, ResourceManager* rm) : Enemy(name + "Towe
 	lowerCannon_->SetJointPos(glm::vec3(0, -0.5, 0));
 	lowerCannon_->SetOrientation(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0)));
 	upperCannon_->SetPosition(glm::vec3(0, 0.5, 0.0));
-
 
 	health = 10;
 }
@@ -65,14 +65,14 @@ void Turret::Update() {
 				cannonLevel_ = glm::pi<float>() * 0.05;
 
 			if (cannonLevelDif < 0.05 && cannonLevelDif > -0.05 && towerRotDif < 0.05 && towerRotDif > -0.05 && coolDown <= 0) {
-				attack = new Attack("PlayerMissile", "MissileCylinder", "ObjectMaterial");
-				attack->SetOrientation(glm::normalize(glm::angleAxis(turretRotation_, glm::vec3(0.0, 1.0, 0.0)) * glm::angleAxis(cannonLevel_, glm::vec3(1.0, 0.0, 0.0))));
 				glm::vec3 attDirRelToTurret = (glm::vec3(0, 0, 0.65) * glm::angleAxis(turretRotation_, glm::vec3(0.0, 1.0, 0.0)) +
 					glm::vec3(0, 3, 0) * glm::angleAxis(cannonLevel_, glm::vec3(1.0, 0.0, 0.0)) * glm::angleAxis(turretRotation_, glm::vec3(0.0, 1.0, 0.0))) * GetScale() * glm::vec3(1, 1, -1);
 				
-				attack->SetPosition(GetPosition() + glm::vec3(0, 0.5, 0) + attDirRelToTurret);
 				glm::vec3 attackPosToPlayer = glm::normalize(playerPos - (GetPosition() + glm::vec3(0, 0.5, 0) + attDirRelToTurret));
-				attack->SetMovment(glm::normalize(attackPosToPlayer) * 2.0f);
+
+				attack = new Torpedo("EnemyMissile", GetPosition() + glm::vec3(0, 0.5, 0) + attDirRelToTurret, glm::normalize(attackPosToPlayer) * 2.0f,
+					glm::normalize(glm::angleAxis(turretRotation_, glm::vec3(0.0, 1.0, 0.0)) * glm::angleAxis(cannonLevel_ + glm::pi<float>(), glm::vec3(1.0, 0.0, 0.0))));
+				attack->SetDamage(1);
 				coolDown = 60;
 			}
 		}
@@ -82,7 +82,7 @@ void Turret::Update() {
 	}
 
 
-	bounds = Bound(GetPosition() + glm::vec3(0, -1.5, 0) * GetScale(), GetPosition() + glm::vec3(0, 1.5, 0) * GetScale(), 1.5 * GetScale().x);
+	bounds = Bound(GetPosition() + glm::vec3(0, 0.5, 0) * GetScale(), GetPosition() + glm::vec3(0, -1.25, 0) * GetScale(), 1 * GetScale().x);
 	//bounds.setPositions(this->GetPosition() + glm::vec3(0, -0.5, 0) * this->GetScale(), this->GetPosition() + glm::vec3(0, 1.5, 0) * this->GetScale());
 	body_->SetOrientation(glm::angleAxis(turretRotation_, glm::vec3(0.0, 1.0, 0.0)));
 	lowerCannon_->SetOrientation(glm::angleAxis(cannonLevel_, glm::vec3(1.0, 0.0, 0.0)));
