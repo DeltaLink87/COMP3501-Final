@@ -17,6 +17,7 @@ namespace game {
 		void Update(void);
 
 	private:
+		SceneNode* propeller_;
 
 		float subRotation_ = 0;
 		float speed = 0;

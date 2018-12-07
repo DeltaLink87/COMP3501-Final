@@ -7,5 +7,5 @@ game::Skybox::Skybox(const std::string name, const Resource * geometry, const Re
 
 void game::Skybox::Update(void)
 {
-	SetPosition(camera_->GetPosition());
+	//SetPosition(camera_->GetPosition());
 }

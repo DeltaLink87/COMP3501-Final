@@ -24,6 +24,10 @@ void Attack::Update() {
 		node->SetPosition(position);
 		node->SetOrientation(orientation);
 	}
+	UpdateBounds();
+}
+
+void Attack::UpdateBounds() {
 	bounds.setPositions(position + glm::vec3(0, 1, 0) * orientation, position + glm::vec3(0, -1, 0) * orientation);
 }
 
@@ -67,6 +71,10 @@ glm::quat Attack::GetOrientation() const {
 
 Bound Attack::getBounds() const {
 	return bounds;
+}
+
+void Attack::SetDamage(int dmg) {
+	damage = dmg;
 }
 
 int Attack::GetDamage() {

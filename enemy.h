@@ -10,7 +10,7 @@ namespace game {
 	class Enemy : public SceneNode
 	{
 	public:
-		Enemy(const std::string name, const Resource *geometry, const Resource *material, const Resource *texture = NULL);
+		Enemy(const std::string name, const Resource *geometry, const Resource *material, const Resource *texture = NULL, const Resource *envMap = NULL);
 		~Enemy();
 
 		virtual void Update(void);

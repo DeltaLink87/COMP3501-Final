@@ -29,8 +29,9 @@ namespace game {
 
             // Update geometry configuration
             void Update(void);
+			virtual void UpdateBounds();
 
-			SceneNode* createSceneNode(ResourceManager* resMan);
+			virtual SceneNode* createSceneNode(ResourceManager* resMan);
 			SceneNode* getSceneNode();
 
 			void SetPosition(glm::vec3 position);
@@ -38,6 +39,7 @@ namespace game {
 			void SetMovment(glm::vec3 move);
 			void SetAcceleration(glm::vec3 acc);
 
+			void SetDamage(int dmg);
 			int GetDamage();
 
 			glm::quat GetOrientation() const;

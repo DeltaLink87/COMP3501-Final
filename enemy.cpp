@@ -4,7 +4,7 @@
 
 namespace game {
 
-Enemy::Enemy(const std::string name, const Resource *geometry, const Resource *material, const Resource *texture) : SceneNode(name, geometry, material, texture) {}
+Enemy::Enemy(const std::string name, const Resource *geometry, const Resource *material, const Resource *texture, const Resource *envMap) : SceneNode(name, geometry, material, texture, envMap) {}
 
 Enemy::~Enemy() {
 	if (attack != NULL)

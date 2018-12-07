@@ -157,6 +157,9 @@ void Game::SetupResources(void){
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/Submarine.obj");
 	resman_.LoadResource(Mesh, "SubMesh", filename.c_str());
 
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/proppellor.obj");
+	resman_.LoadResource(Mesh, "PropellerMesh", filename.c_str());
+
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/UI");
 	resman_.LoadResource(Material, "UI", filename.c_str());
 
@@ -197,8 +200,8 @@ void Game::SetupScene(void){
 	world->SetScale(glm::vec3(world->getBounds()[1] - world->getBounds()[0], 2, world->getBounds()[5] - world->getBounds()[4]));
 	scene_.AddNode(world);
 
-	player_ = new Player("Player", resman_.GetResource("SubMesh"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("SubTex"), resman_.GetResource("LakeCubeMap"));
-	player_->SetPosition(glm::vec3(0, 100, 150));
+	player_ = new Player("Player", &resman_);
+	player_->SetPosition(glm::vec3(0, 100, 0));
 	player_->SetReflectivity(0.2f);
 	scene_.AddNode(player_);
 
@@ -218,9 +221,9 @@ void Game::SetupScene(void){
 
     // Create asteroid field
     //CreateAsteroidField();
-	CreateMineField();
-	CreateSubmarines(100);
-	CreateTowers();
+	CreateMineField(100);
+	CreateSubmarines(50);
+	CreateTowers(10);
 }
 
 
@@ -341,7 +344,7 @@ void Game::MainLoop(void){
 		}
 		else {
 			glm::vec3 lookAt = player_->GetPosition() + glm::vec3(0, 0, 50) * player_->GetForward();
-			camera_.SetView(player_->GetPosition() + glm::vec3(0, 0, 1) * player_->GetForward(), lookAt, upVec);
+			camera_.SetView(player_->GetPosition() + (glm::vec3(0, 0, 7.8) * player_->GetScale()) * player_->GetForward(), lookAt, upVec);
 		}
 
 		//mainLight_->SetPosition(mainLight_->GetPosition() + glm::vec3(glm::sin(glfwGetTime()), cos(glfwGetTime()), 0.0f));
@@ -355,6 +358,7 @@ void Game::MainLoop(void){
 		mainLight_->SetRange(mainLight_->GetRange() + (10 * direction));
 		//skybox_->SetPosition(camera_.GetPosition());
 
+		skybox_->SetPosition(camera_.GetPosition());
         // Draw the scene
         //scene_.Draw(&camera_);
 		scene_.DrawToTexture(&camera_);
@@ -448,6 +452,9 @@ void Game::MouseButtonCallback(GLFWwindow* window, int button, int action, int m
 		game->rotateCam = true;
 	if (button == 0 && action == GLFW_RELEASE)
 		game->rotateCam = false;
+
+	if (button == 1 && action == GLFW_PRESS)
+		game->camRotation_ = glm::angleAxis(0.0f, glm::vec3(1.0, 0.0, 0.0));
 }
 
 void Game::MouseEnterCallback(GLFWwindow* window, int entered) {

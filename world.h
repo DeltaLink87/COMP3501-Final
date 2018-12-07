@@ -38,7 +38,7 @@ namespace game {
             // Angular momentum of asteroid
             glm::quat angm_;
 
-			float* worldBounds = new float[6]{-300.0, 300.0, 0.0, 600.0, -300.0, 300.0};
+			float* worldBounds = new float[6]{-300.0, 300.0, 0.0, 150.0, -300.0, 300.0};
     }; // class Asteroid
 
 } // namespace game

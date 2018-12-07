@@ -26,6 +26,10 @@ namespace game {
 
             // Destructor
             ~DepthCharge();
+
+			void UpdateBounds();
+
+			SceneNode* createSceneNode(ResourceManager* resMan);
             
 
     }; // class Asteroid

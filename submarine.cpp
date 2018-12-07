@@ -4,13 +4,20 @@
 
 namespace game {
 
-Submarine::Submarine(const std::string name, ResourceManager* rm) : Enemy(name + "Submarine", rm->GetResource("PlayerCylinder"), rm->GetResource("ObjectMaterial")) {
+Submarine::Submarine(const std::string name, ResourceManager* rm) : Enemy(name + "Submarine", rm->GetResource("SubMesh"), rm->GetResource("ObjectMaterial"), rm->GetResource("SubTex")) {
 	this->SetOrientation(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0)));
+	bounds = Bound(glm::vec3(), glm::vec3(), 2 * 0.5);
+
+	propeller_ = new SceneNode(name + "Propeller", rm->GetResource("PropellerMesh"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture"));
+	propeller_->SetJointPos(glm::vec3(-0.1025, 0.0, -0.1425));
+	this->AddChild(propeller_);
 
 	health = 2;
 }
 
-Submarine::~Submarine() {}
+Submarine::~Submarine() {
+	delete propeller_;
+}
 
 
 void Submarine::Update() {
@@ -68,7 +75,9 @@ void Submarine::Update() {
 	this->Translate(glm::normalize(glm::angleAxis(subRotation_, glm::vec3(0.0, 1.0, 0.0)) * glm::vec3(0.0, 0.0, 1.0)) * speed);
 
 	bounds = Bound(GetPosition() + glm::vec3(0, -1.5, 0) * GetScale(), GetPosition() + glm::vec3(0, 1.5, 0) * GetScale(), 1.5 * GetScale().x);
-	bounds.setPositions(this->GetPosition() + glm::vec3(0, -0.5, 0) * this->GetScale(), this->GetPosition() + glm::vec3(0, 1.5, 0) * this->GetScale());
+	bounds.setPositions(GetPosition() + (glm::vec3(0, 0, 7.5) * GetScale()) * glm::angleAxis(subRotation_, glm::vec3(0.0, 1.0, 0.0)) * GetScale(), GetPosition());
+
+	propeller_->Rotate(glm::angleAxis(glm::pi<float>() / 4, glm::vec3(0.0, 1.0, 0.0)));
 }
 
 }
