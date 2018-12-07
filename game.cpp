@@ -161,6 +161,9 @@ void Game::SetupResources(void){
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/Submarine.obj");
 	resman_.LoadResource(Mesh, "SubMesh", filename.c_str());
 
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/Enemy.obj");
+	resman_.LoadResource(Mesh, "EnemySubMesh", filename.c_str());
+
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/proppellor.obj");
 	resman_.LoadResource(Mesh, "PropellerMesh", filename.c_str());
 

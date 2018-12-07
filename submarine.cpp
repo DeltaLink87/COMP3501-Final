@@ -4,9 +4,10 @@
 
 namespace game {
 
-Submarine::Submarine(const std::string name, ResourceManager* rm) : Enemy(name + "Submarine", rm->GetResource("SubMesh"), rm->GetResource("ObjectMaterial"), rm->GetResource("SubTex")) {
+Submarine::Submarine(const std::string name, ResourceManager* rm) : Enemy(name + "Submarine", rm->GetResource("EnemySubMesh"), rm->GetResource("ObjectMaterial"), rm->GetResource("enemyTex")) {
 	this->SetOrientation(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0)));
 	bounds = Bound(glm::vec3(), glm::vec3(), 2 * 0.5);
+	this->SetRoughness(0.25f);
 
 	propeller_ = new SceneNode(name + "Propeller", rm->GetResource("PropellerMesh"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture"));
 	propeller_->SetJointPos(glm::vec3(-0.1025, 0.0, -0.1425));

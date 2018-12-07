@@ -4,7 +4,7 @@
 
 namespace game {
 
-Mine::Mine(const std::string name, ResourceManager* rm) : Enemy(name + "Mine", rm->GetResource("MineMesh"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture")) {
+Mine::Mine(const std::string name, ResourceManager* rm) : Enemy(name + "Mine", rm->GetResource("MineMesh"), rm->GetResource("ObjectMaterial"), rm->GetResource("RustyMetal")) {
 	health = 1;
 	bobblingTimer = (float)rand() / RAND_MAX * glm::pi<float>();
 	SetScale(glm::vec3(0.5, 0.5, 0.5));
