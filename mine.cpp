@@ -20,7 +20,7 @@ void Mine::Update() {
 	bounds = Bound(GetPosition() + glm::vec3(0, -0.01, 0) * GetScale(), GetPosition() + glm::vec3(0, 0.01, 0) * GetScale(), 2 * GetScale().x);
 	if (player) {
 		if (player->getBounds().intersects(bounds)) {
-			attack = new Attack("MineExplosion", "SimpleSphereMesh", "ObjectMaterial");
+			attack = new Attack("MineExplosion", "MineMesh", "ObjectMaterial");
 			attack->SetPosition(GetPosition());
 			health = 0;
 		}
