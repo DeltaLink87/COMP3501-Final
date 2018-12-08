@@ -27,13 +27,18 @@ void main()
     float t = mod(progress + offset, 1.0); // Our time parameter
     
     // Let's first work in model space (apply only world matrix)
-    vec4 position = world_mat * vec4(vertex, 1.0);
+
+
+    vec4 position = vec4(vertex, 1.0);
     vec4 norm = normal_mat * vec4(normal, 1.0);
+	
+    position.y -= t *speed;
+
+	position = world_mat * position;
+
 	if (t > 0.5) {
 		position.y += (t - 0.5) * (t - 0.5) * speed / 2;
 	}
-	
-    position.z -= t *speed;
 
     
     // Now apply view transformation
