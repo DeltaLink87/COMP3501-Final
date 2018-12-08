@@ -25,7 +25,8 @@ Submarine::Submarine(const std::string name, ResourceManager* rm) : Enemy(name +
 
 Submarine::~Submarine() {
 	delete propeller_;
-	delete particleTrail;
+	if (particleTrail)
+		delete particleTrail;
 }
 
 

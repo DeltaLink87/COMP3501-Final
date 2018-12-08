@@ -33,7 +33,7 @@ namespace game {
 
 	private:
 		SceneNode* propeller_;
-		ParticleFountain* particleTrail;
+		ParticleFountain* particleTrail = NULL;
 
 		double countDown = 20;
 

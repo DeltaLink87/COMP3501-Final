@@ -18,7 +18,7 @@ namespace game {
 
 	private:
 		SceneNode* propeller_;
-		ParticleFountain* particleTrail;
+		ParticleFountain* particleTrail = NULL;
 
 		float subRotation_ = 0;
 		float speed = 0;

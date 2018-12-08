@@ -11,7 +11,10 @@ Torpedo::Torpedo(const std::string name, glm::vec3 pos, glm::vec3 movement, glm:
 }
 
 
-Torpedo::~Torpedo(){}
+Torpedo::~Torpedo(){
+	if (particleTrail)
+		delete particleTrail;
+}
 
 void Torpedo::UpdateBounds() {
 	bounds.setPositions(position + orientation * glm::vec3(0, -1.5, 0), position + orientation * glm::vec3(0, -2.5, 0));

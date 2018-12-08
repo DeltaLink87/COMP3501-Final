@@ -26,7 +26,8 @@ namespace game {
 
 	Player::~Player() {
 		delete propeller_;
-		delete particleTrail;
+		if (particleTrail)
+			delete particleTrail;
 	}
 
 	glm::quat Player::GetForward() {
