@@ -29,12 +29,13 @@ namespace game {
 		Attack* getNewAttack();
 		Bound getBounds() const;
 		bool isDead();
-
+		void time();
 
 	private:
 		SceneNode* propeller_;
 		ParticleFountain* particleTrail;
 
+		double countDown = 20;
 
 
 		glm::quat forward_ = glm::angleAxis(0/glm::pi<float>(), glm::vec3(0.0, 0.0, 1.0));

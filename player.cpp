@@ -73,6 +73,7 @@ namespace game {
 		this->Translate(glm::vec3(0, 0, speed_) * forward_);
 		bounds.setPositions(GetPosition() + GetOrientation() * glm::vec3(0, 7.0, 0) * GetScale(), GetPosition());
 		propeller_->Rotate(glm::angleAxis(glm::pi<float>() * (speed_ * 0.25f), glm::vec3(0.0, 1.0, 0.0)));
+		time();
 	}
 
 	void Player::fire() {
@@ -114,4 +115,27 @@ namespace game {
 	Bound Player::getBounds() const {
 		return bounds;
 	}
+
+	void Player::time() {
+		countDown -= 1.0 / 60.0; //increase time
+		//std::printf("%f", countDown);
+		if (countDown <= 10.0 && countDown >= 9.9) {
+			std::printf("RUNNING OUT OF TIME! 10 SECONDS LEFT\n");
+
+		}
+
+		if (countDown <= 5.0 && countDown >= 4.9) {
+			std::printf("RUNNING OUT OF TIME! 5 SECONDS LEFT\n");
+
+		}
+
+		if (countDown <= 0.0 ) {
+			std::printf("TIMES UP! restart to play again!\n");
+			health = 0;
+
+			std::printf("YOUR SCORE is at: %d\n", points);
+
+		}
+	}
+
 }

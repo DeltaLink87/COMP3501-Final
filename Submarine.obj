@@ -1,7 +1,6 @@
 # Blender v2.79 (sub 0) OBJ File: 'Submarine.blend'
 # www.blender.org
 mtllib Submarine.mtl
-o Sphere
 v -1.072136 5.892320 1.107194
 v -1.189219 5.682796 0.787643
 v -1.008736 5.670007 1.053360

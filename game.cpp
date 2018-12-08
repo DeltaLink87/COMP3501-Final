@@ -147,9 +147,16 @@ void Game::SetupResources(void){
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/glassTex.jpg");
 	resman_.LoadResource(Texture, "SubTex", filename.c_str());
 
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/Sand.jpg");
+	resman_.LoadResource(Texture, "sand", filename.c_str());
+
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/stone.jpg");
+	resman_.LoadResource(Texture, "stone", filename.c_str());
+
 
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/dice.png");
 	resman_.LoadResource(Texture, "DiceTexture", filename.c_str());
+
 
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/fire.png");
 	resman_.LoadResource(Texture, "FireTexture", filename.c_str());
@@ -236,7 +243,7 @@ void Game::SetupScene(void){
     // Set background color for the scene
     scene_.SetBackgroundColor(viewport_background_color_g);
 
-	world = new World("World", resman_.GetResource("WorldPlane"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("FloorTex"));
+	world = new World("World", resman_.GetResource("WorldPlane"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("sand"));
 	world->SetPosition(glm::vec3((world->getBounds()[0] + world->getBounds()[1]) / 2, world->getFloor() - 1.0, (world->getBounds()[4] + world->getBounds()[5]) / 2));
 	world->SetScale(glm::vec3(world->getBounds()[1] - world->getBounds()[0], 2, world->getBounds()[5] - world->getBounds()[4]));
 	scene_.AddNode(world);
