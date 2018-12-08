@@ -6,7 +6,7 @@
 namespace game {
 
 Turret::Turret(const std::string name, ResourceManager* rm) : Enemy(name + "Tower", rm->GetResource("TurTowerCube"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture")) {
-	body_ = new SceneNode(name + "Body", rm->GetResource("TurBodyCylinder"), rm->GetResource("ObjectMaterial"), rm->GetResource("DiceTexture"));
+	body_ = new SceneNode(name + "Body", rm->GetResource("TurBodyCylinder"), rm->GetResource("ObjectMaterial"), rm->GetResource("stone"));
 	lowerCannon_ = new SceneNode(name + "Lower", rm->GetResource("TurLowerCylinder"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture"));
 	upperCannon_ = new SceneNode(name + "Upper", rm->GetResource("TurUpperCylinder"), rm->GetResource("ObjectMaterial"), rm->GetResource("MetalTexture"));
 

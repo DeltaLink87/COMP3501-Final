@@ -19,7 +19,7 @@ namespace game {
 
         public:
             // Create asteroid from given resources
-			World(const std::string name, const Resource *geometry, const Resource *material);
+			World(const std::string name, const Resource *geometry, const Resource *material, const Resource *texture);
 
             // Destructor
             ~World();
