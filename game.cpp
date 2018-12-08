@@ -233,6 +233,8 @@ void Game::SetupResources(void){
 
 	resman_.CreateParticleCluster("BubbleCluster", 50);
 
+	resman_.CreateParticleCluster("TrailCluster", 5);
+
 	resman_.CreateParticleCluster("PulseCluster", 500);
 
 	// Load material to be applied to skybox

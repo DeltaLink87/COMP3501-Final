@@ -27,7 +27,7 @@ void Torpedo::Update() {
 SceneNode* Torpedo::createSceneNode(ResourceManager* resMan) {
 	SceneNode* node = Attack::createSceneNode(resMan);
 
-	particleTrail = new ParticleFountain("PlayerSubTrail", resMan->GetResource("BubbleCluster"), resMan->GetResource("TrailMaterial"), resMan->GetResource("BubbleTexture"), 1.0f);
+	particleTrail = new ParticleFountain("PlayerSubTrail", resMan->GetResource("TrailCluster"), resMan->GetResource("TrailMaterial"), resMan->GetResource("BubbleTexture"), 1.0f);
 	particleTrail->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 	particleTrail->SetPosition(glm::vec3(0, 2.5, 0));
 	particleTrail->SetOrientation(glm::angleAxis(glm::pi<float>(), glm::vec3(1, 0, 0)));
