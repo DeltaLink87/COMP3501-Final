@@ -21,7 +21,6 @@ uniform vec3 up_vec = vec3(0.0, 1.0, 0.0);
 float grav = 0.005; // Gravity
 float speed = 6.0; // Allows to control the speed of the explosion
 
-
 void main()
 {
     float phase = color.r - 0.5;

@@ -16,7 +16,7 @@ uniform float particle_size = 0.01;
 
 // Attributes passed to the fragment shader
 out vec4 frag_color;
-
+out float time;
 
 void main(void){
 
@@ -40,6 +40,7 @@ void main(void){
     for (int i = 0; i < 4; i++){
         gl_Position = projection_mat * v[i];
         frag_color = vec4(vertex_color[0], 1.0);
+		time = timestep[0];
         EmitVertex();
      }
 

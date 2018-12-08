@@ -236,10 +236,9 @@ void SceneNode::Draw(Camera *camera){
 	if (blending_) {
 		// Disable z-buffer
 		glEnable(GL_DEPTH_TEST);
-
+		glDepthMask(GL_FALSE);
 		// Enable blending
 		glEnable(GL_BLEND);
-		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		//glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); // Simpler form
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE, GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBlendEquationSeparate(GL_FUNC_ADD, GL_MAX);
@@ -247,7 +246,8 @@ void SceneNode::Draw(Camera *camera){
 	else {
 		// Enable z-buffer
 
-		glDisable(GL_BLEND);
+		glDisable(GL_BLEND); 
+		glDepthMask(GL_TRUE);
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LESS);
 	}
@@ -276,6 +276,8 @@ void SceneNode::Draw(Camera *camera){
 	for (int i = 0; i < children_.size(); i++) {
 		children_[i]->Draw(camera);
 	}
+
+	glDisable(GL_BLEND);
 }
 
 

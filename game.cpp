@@ -150,6 +150,9 @@ void Game::SetupResources(void){
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/bubble.png");
 	resman_.LoadResource(Texture, "BubbleTexture", filename.c_str());
 
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/pulse.png");
+	resman_.LoadResource(Texture, "PulseTexture", filename.c_str());
+
 	// Load cube map to be applied to skybox
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/island/island.tga");
 	resman_.LoadResource(CubeMap, "LakeCubeMap", filename.c_str());
@@ -174,6 +177,12 @@ void Game::SetupResources(void){
 
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/bubbles");
 	resman_.LoadResource(Material, "BubblesMaterial", filename.c_str());
+
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/pulse");
+	resman_.LoadResource(Material, "PulseMaterial", filename.c_str());
+
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/trail");
+	resman_.LoadResource(Material, "TrailMaterial", filename.c_str());
 
 
 	// Create a simple sphere to represent the asteroids
@@ -427,16 +436,16 @@ void Game::KeyCallback(GLFWwindow* window, int key, int scancode, int action, in
     }
     if (key == GLFW_KEY_LEFT_CONTROL && action == GLFW_PRESS){
 		//game->player_->Fall();
-		ParticleFountain * bubbles = (ParticleFountain *)game->scene_.GetNode("Bubbles");
-		bubbles->StopFountain();
+		ParticleFountain * trail = (ParticleFountain *)game->scene_.GetNode("Trail");
+		trail->StopFountain();
     }
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS) {
 		game->player_->fire();
-		ParticleFountain * bubbles = new ParticleFountain("Bubbles", game->resman_.GetResource("BubbleCluster"), game->resman_.GetResource("BubblesMaterial"), game->resman_.GetResource("BubbleTexture"), 1.0f);
-		bubbles->SetPosition(game->player_->GetPosition());
-		bubbles->SetScale(glm::vec3(10.0f, 10.0, 10.0));
-		bubbles->SetBlending(true);
-		game->scene_.AddNode(bubbles);
+		ParticleFountain * trail = new ParticleFountain("Trail", game->resman_.GetResource("BubbleCluster"), game->resman_.GetResource("TrailMaterial"), game->resman_.GetResource("PulseTexture"), 2.0f);
+		trail->SetPosition(game->player_->GetPosition());
+		//trail->SetScale(glm::vec3(0.1, 0.1, 0.1));
+		trail->SetBlending(true);
+		game->scene_.AddNode(trail);
 	}
 	if (key == GLFW_KEY_1 && action == GLFW_PRESS) {
 		game->player_->changeFireType(1);
