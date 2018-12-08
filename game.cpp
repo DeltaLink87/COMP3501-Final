@@ -11,7 +11,7 @@ namespace game {
 // They are written here as global variables, but ideally they should be loaded from a configuration file
 
 // Main window settings
-const std::string window_title_g = "Demo";
+const std::string window_title_g = "SubAttack";
 const unsigned int window_width_g = 800;
 const unsigned int window_height_g = 600;
 const bool window_full_screen_g = false;
@@ -232,6 +232,8 @@ void Game::SetupResources(void){
 	resman_.CreateParticleCluster("ParticleCluster");
 
 	resman_.CreateParticleCluster("BubbleCluster", 50);
+
+	resman_.CreateParticleCluster("PulseCluster", 500);
 
 	// Load material to be applied to skybox
     filename = std::string(MATERIAL_DIRECTORY) + std::string("/skybox");
