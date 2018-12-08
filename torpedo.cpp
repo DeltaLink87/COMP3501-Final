@@ -16,6 +16,23 @@ Torpedo::~Torpedo(){}
 void Torpedo::UpdateBounds() {
 	bounds.setPositions(position + orientation * glm::vec3(0, -1.5, 0), position + orientation * glm::vec3(0, -2.5, 0));
 }
+
+void Torpedo::Update() {
+	Attack::Update();
+}
+
+SceneNode* Torpedo::createSceneNode(ResourceManager* resMan) {
+	SceneNode* node = Attack::createSceneNode(resMan);
+
+	particleTrail = new ParticleFountain("PlayerSubTrail", resMan->GetResource("BubbleCluster"), resMan->GetResource("TrailMaterial"), resMan->GetResource("BubbleTexture"), 1.0f);
+	particleTrail->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	particleTrail->SetPosition(glm::vec3(0, 2.5, 0));
+	particleTrail->SetOrientation(glm::angleAxis(glm::pi<float>(), glm::vec3(1, 0, 0)));
+	particleTrail->SetBlending(true);
+	node->AddChild(particleTrail);
+
+	return node;
+}
             
 ParticleSystem* Torpedo::hitParticles(ResourceManager* resMan) {
 	ParticleSystem* p = new ParticleSystem(name + "Explosion", resMan->GetResource("BubbleCluster"), resMan->GetResource("ExplosionMaterial"), resMan->GetResource("FireTexture"), 1.0f);

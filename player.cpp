@@ -6,6 +6,7 @@
 namespace game {
 
 	Player::Player(const std::string name, ResourceManager* rm) : SceneNode(name, rm->GetResource("SubMesh"), rm->GetResource("ObjectMaterial"), rm->GetResource("SubTex"), rm->GetResource("LakeCubeMap")) {
+		this->SetReflectivity(0.5f);
 		this->SetOrientation(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0)));
 		this->SetScale(glm::vec3(0.5, 0.5, 0.5));
 		bounds = Bound(glm::vec3(), glm::vec3(), 2 * 0.5);
@@ -14,10 +15,10 @@ namespace game {
 		propeller_->SetJointPos(glm::vec3(-0.1025, 0.0, -0.1425));
 		this->AddChild(propeller_);
 
-		/*particleTrail = new ParticleFountain("PlayerSubTrail", rm->GetResource("BubbleCluster"), rm->GetResource("BubblesMaterial"), rm->GetResource("BubbleTexture"), 1.0f);
+		particleTrail = new ParticleFountain("PlayerSubTrail", rm->GetResource("BubbleCluster"), rm->GetResource("TrailMaterial"), rm->GetResource("BubbleTexture"), 1.0f);
 		particleTrail->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 		particleTrail->SetBlending(true);
-		this->AddChild(particleTrail);*/
+		this->AddChild(particleTrail);
 
 		health = 20;
 		points = 0;
@@ -81,7 +82,7 @@ namespace game {
 			delete attack;
 
 		if (fireType == 1) {
-			attack = new Pulse("PlayerPulse", GetPosition() + (glm::vec3(0, 0, 9.5) * GetScale()) * forward_, glm::vec3(0, 0, 4) * forward_,
+			attack = new Pulse("PlayerPulse", GetPosition() + (glm::vec3(0, 0, 12) * GetScale()) * forward_, glm::vec3(0, 0, 4) * forward_,
 				glm::normalize(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0) * forward_)));
 		}
 		else if (fireType == 2) {

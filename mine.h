@@ -29,6 +29,7 @@ namespace game {
 
 		void UpdateBounds();
 
+
 		ParticleSystem* hitParticles(ResourceManager* resMan);
 
 	private:

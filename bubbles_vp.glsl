@@ -1,4 +1,5 @@
 #version 400
+#define M_PI 3.1415926535897932384626433832795
 
 // Vertex buffer
 in vec3 vertex;
@@ -30,10 +31,9 @@ void main()
     vec4 position = world_mat * vec4(vertex, 1.0);
     vec4 norm = normal_mat * vec4(normal, 1.0);
 
-    // Move point along normal and down with t*t (acceleration under gravity)
-    position.x += norm.x*sin(t)*speed * 2;
+    position.x += norm.x*sin(t * 2 * M_PI)*speed / 5.0;
     position.y += t*speed;
-    position.z += norm.z*cos(t)*speed * 2;
+    position.z += norm.z*cos(t * 2 * M_PI)*speed / 5.0;
     
     // Now apply view transformation
     gl_Position = view_mat * position;

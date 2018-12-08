@@ -12,6 +12,7 @@
 #include "resource.h"
 #include "scene_node.h"
 #include "resource_manager.h"
+#include "particle_fountain.h"
 #include "bound.h"
 #include "attack.h"
 
@@ -27,9 +28,14 @@ namespace game {
             // Destructor
             ~Torpedo();
 
+			void Update();
 			void UpdateBounds();
+			SceneNode* createSceneNode(ResourceManager* resMan);
             
 			ParticleSystem* hitParticles(ResourceManager* resMan);
+
+		private:
+			ParticleFountain* particleTrail = NULL;
     }; // class Asteroid
 
 } // namespace game

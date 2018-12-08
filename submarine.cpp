@@ -15,12 +15,17 @@ Submarine::Submarine(const std::string name, ResourceManager* rm) : Enemy(name +
 	propeller_->SetJointPos(glm::vec3(-0.1025, 0.0, -0.1425));
 	this->AddChild(propeller_);
 
+	particleTrail = new ParticleFountain("PlayerSubTrail", rm->GetResource("BubbleCluster"), rm->GetResource("TrailMaterial"), rm->GetResource("BubbleTexture"), 1.0f);
+	particleTrail->SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
+	particleTrail->SetBlending(true);
+	this->AddChild(particleTrail);
 
 	health = 2;
 }
 
 Submarine::~Submarine() {
 	delete propeller_;
+	delete particleTrail;
 }
 
 

@@ -205,6 +205,11 @@ void Game::SetupResources(void){
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/bubbles");
 	resman_.LoadResource(Material, "BubblesMaterial", filename.c_str());
 
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/trail");
+	resman_.LoadResource(Material, "TrailMaterial", filename.c_str());
+
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/pulse");
+	resman_.LoadResource(Material, "PulseMaterial", filename.c_str());
 
 	// Create a simple sphere to represent the asteroids
 	resman_.CreateCube("TurTowerCube");
