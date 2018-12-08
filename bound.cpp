@@ -33,6 +33,13 @@ glm::vec3 Bound::GetPoint2() const {
 }
 
 double Bound::distanceBetween(const Bound other) {
+	// Copyright 2001 softSurfer, 2012 Dan Sunday
+	// This code may be freely used, distributed and modified for any purpose
+	// providing that this copyright notice is included with it.
+	// SoftSurfer makes no warranty for this code, and cannot be held
+	// liable for any real or imagined damage resulting from its use.
+	// Users of this code must verify correctness for their application.
+
 	const float SMALLNUM = 0.000000001;
 	glm::vec3 u = this->p2 - this->p1;
 	glm::vec3 v = other.p2 - other.p1;
