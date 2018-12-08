@@ -16,11 +16,23 @@ void Bound::setPositions(glm::vec3 p1, glm::vec3 p2) {
 	this->p2 = p2;
 }
 
-void Bound::setBound(float bound) {
+void Bound::setRadius(float bound) {
 	this->radius = bound;
 }
 
-bool Bound::intersects(const Bound other) {
+float Bound::GetRadius() {
+	return radius;
+}
+
+glm::vec3 Bound::GetPoint1() const {
+	return p1;
+}
+
+glm::vec3 Bound::GetPoint2() const {
+	return p2;
+}
+
+double Bound::distanceBetween(const Bound other) {
 	const float SMALLNUM = 0.000000001;
 	glm::vec3 u = this->p2 - this->p1;
 	glm::vec3 v = other.p2 - other.p1;
@@ -79,7 +91,11 @@ bool Bound::intersects(const Bound other) {
 	oi = oN / oD;
 	glm::vec3 dis = w + (ti * u) + (oi * v);
 
-	return glm::length(dis) < this->radius + other.radius;
+	return glm::length(dis);
+}
+
+bool Bound::intersects(const Bound other) {
+	return distanceBetween(other) < this->radius + other.radius;
 }
             
 } // namespace game

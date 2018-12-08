@@ -71,7 +71,7 @@ namespace game {
 
 	void Player::Update() {
 		this->Translate(glm::vec3(0, 0, speed_) * forward_);
-		bounds.setPositions(GetPosition() + glm::vec3(0, -7.0, 0) * GetOrientation() * GetScale(), GetPosition());
+		bounds.setPositions(GetPosition() + GetOrientation() * glm::vec3(0, 7.0, 0) * GetScale(), GetPosition());
 		propeller_->Rotate(glm::angleAxis(glm::pi<float>() * (speed_ * 0.25f), glm::vec3(0.0, 1.0, 0.0)));
 	}
 

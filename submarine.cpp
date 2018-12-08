@@ -78,8 +78,8 @@ void Submarine::Update() {
 	this->SetOrientation(glm::angleAxis(glm::pi<float>() / 2.0f, glm::vec3(1.0, 0.0, 0.0)) * glm::angleAxis(-subRotation_, glm::vec3(0.0, 0.0, 1.0)));
 	this->Translate(glm::normalize(glm::angleAxis(subRotation_, glm::vec3(0.0, 1.0, 0.0)) * glm::vec3(0.0, 0.0, 1.0)) * speed);
 
-	bounds = Bound(GetPosition() + glm::vec3(0, 7.0, 0) * GetOrientation() * GetScale(), GetPosition(), 1.5 * GetScale().x);
-	bounds.setPositions(GetPosition() + glm::vec3(0, -7.0, 0) * GetOrientation() * GetScale(), GetPosition());
+	bounds = Bound(GetPosition() + GetOrientation() * glm::vec3(0, 7.0, 0) * GetScale(), GetPosition(), 1.5 * GetScale().x);
+	bounds.setPositions(GetPosition() + GetOrientation() * glm::vec3(0, 7.0, 0) * GetScale(), GetPosition());
 
 	propeller_->Rotate(glm::angleAxis(glm::pi<float>() / 4, glm::vec3(0.0, 1.0, 0.0)));
 }

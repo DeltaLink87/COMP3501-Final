@@ -41,6 +41,8 @@ namespace game {
 			void CreateCylinder(std::string object_name, float height = 1.0, float radius = 0.5, int numCircleSamples = 30);
 			//Create the geometry for a cylinder
 			void CreateCube(std::string object_name, glm::vec3 color = glm::vec3(-1, -1, -1));
+			void CreatePlane(std::string object_name, glm::vec3 color = glm::vec3(-1, -1, -1));
+
 			void CreateSkybox(std::string object_name);
 			void LoadCubeMap(const std::string name, const char *filename);
 			void CreateSphereParticles(std::string object_name, int num_particles = 20000);

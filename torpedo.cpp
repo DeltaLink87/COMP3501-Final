@@ -14,7 +14,7 @@ Torpedo::Torpedo(const std::string name, glm::vec3 pos, glm::vec3 movement, glm:
 Torpedo::~Torpedo(){}
 
 void Torpedo::UpdateBounds() {
-	bounds.setPositions(position + glm::vec3(0, 1.5, 0) * orientation, position + glm::vec3(0, 2.5, 0) * orientation);
+	bounds.setPositions(position + orientation * glm::vec3(0, -1.5, 0), position + orientation * glm::vec3(0, -2.5, 0));
 }
             
 ParticleSystem* Torpedo::hitParticles(ResourceManager* resMan) {

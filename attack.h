@@ -56,9 +56,6 @@ namespace game {
 			std::string texName;
 			SceneNode* node = NULL;
 
-			SceneNode* forwardBound;
-			SceneNode* backBound;
-
 			Bound bounds = Bound(glm::vec3(), glm::vec3(), 1);
 
 			glm::vec3 position = glm::vec3(0, 0, 0);

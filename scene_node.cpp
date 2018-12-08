@@ -272,6 +272,8 @@ void SceneNode::Draw(Camera *camera){
         glDrawElements(mode_, size_, GL_UNSIGNED_INT, 0);
     }
 
+	glDisable(GL_BLEND);
+
 	// Draw all scene nodes
 	for (int i = 0; i < children_.size(); i++) {
 		children_[i]->Draw(camera);

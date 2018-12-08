@@ -28,7 +28,7 @@ void Attack::Update() {
 }
 
 void Attack::UpdateBounds() {
-	bounds.setPositions(position + glm::vec3(0, 1, 0) * orientation, position + glm::vec3(0, -1, 0) * orientation);
+	bounds.setPositions(position + orientation * glm::vec3(0, 1, 0), position + orientation * glm::vec3(0, -1, 0));
 }
 
 SceneNode* Attack::createSceneNode(ResourceManager* resMan) {
@@ -40,17 +40,6 @@ SceneNode* Attack::createSceneNode(ResourceManager* resMan) {
 	else node = new SceneNode(name, resMan->GetResource(geoName), resMan->GetResource(matName), resMan->GetResource(texName));
 	node->SetPosition(position);
 	node->SetOrientation(orientation);
-
-
-
-	forwardBound = new SceneNode("forBound", resMan->GetResource("TurTowerCube"), resMan->GetResource("ObjectMaterial"));
-	forwardBound->SetScale(glm::vec3(3, 1, 3));
-	forwardBound->SetPosition(glm::vec3(0, 4, 0));
-	node->AddChild(forwardBound);
-	backBound = new SceneNode("backBound", resMan->GetResource("TurTowerCube"), resMan->GetResource("ObjectMaterial"));
-	backBound->SetScale(glm::vec3(3, 1, 3));
-	backBound->SetPosition(glm::vec3(0, 2, 0));
-	node->AddChild(backBound);
 
 	return node;
 }

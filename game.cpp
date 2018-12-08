@@ -157,8 +157,11 @@ void Game::SetupResources(void){
 	filename = std::string(TEXTURE_DIRECTORY) + std::string("/bubble.png");
 	resman_.LoadResource(Texture, "BubbleTexture", filename.c_str());
 
+	filename = std::string(TEXTURE_DIRECTORY) + std::string("/island/uw_dn.jpg");
+	resman_.LoadResource(Texture, "FloorTex", filename.c_str());
+
 	// Load cube map to be applied to skybox
-	filename = std::string(MATERIAL_DIRECTORY) + std::string("/island/island.tga");
+	filename = std::string(MATERIAL_DIRECTORY) + std::string("/island/uw.jpg");
 	resman_.LoadResource(CubeMap, "LakeCubeMap", filename.c_str());
 
 	filename = std::string(MATERIAL_DIRECTORY) + std::string("/cube.obj");
@@ -204,6 +207,8 @@ void Game::SetupResources(void){
 
 	resman_.CreateCube("WorldCube", glm::vec3(0.6, 0.6, 0.45));
 
+	resman_.CreatePlane("WorldPlane", glm::vec3(0.6, 0.6, 0.45));
+
 	resman_.CreateCylinder("PlayerCylinder", 2, 0.5);
 
 	resman_.CreateCylinder("MissileCylinder", 1, 0.25);
@@ -231,7 +236,7 @@ void Game::SetupScene(void){
     // Set background color for the scene
     scene_.SetBackgroundColor(viewport_background_color_g);
 
-	world = new World("World", resman_.GetResource("WorldCube"), resman_.GetResource("ObjectMaterial"));
+	world = new World("World", resman_.GetResource("WorldPlane"), resman_.GetResource("ObjectMaterial"), resman_.GetResource("FloorTex"));
 	world->SetPosition(glm::vec3((world->getBounds()[0] + world->getBounds()[1]) / 2, world->getFloor() - 1.0, (world->getBounds()[4] + world->getBounds()[5]) / 2));
 	world->SetScale(glm::vec3(world->getBounds()[1] - world->getBounds()[0], 2, world->getBounds()[5] - world->getBounds()[4]));
 	scene_.AddNode(world);
@@ -265,6 +270,7 @@ void Game::SetupScene(void){
 
 void Game::MainLoop(void){
 	int direction = 1;
+
     // Loop while the user did not close the window
     while (!glfwWindowShouldClose(window_)){
         // Animate the scene
@@ -299,6 +305,13 @@ void Game::MainLoop(void){
 				scene_.AddNode(newNode);
 			}
 
+			if (enemies_[i]->getBounds().intersects(player_->getBounds())) {
+				glm::vec3 playerDir = glm::normalize(player_->GetPosition() - enemies_[i]->GetPosition());
+				float playerDis = enemies_[i]->getBounds().distanceBetween(player_->getBounds());
+				float playerReqDis = enemies_[i]->getBounds().GetRadius() + player_->getBounds().GetRadius();
+				player_->Translate(playerDir * (playerReqDis - playerDis));
+			}
+
 			if (enemies_[i]->isDead()) {
 				Enemy* rmEnemy = enemies_[i];
 				player_->GainPoint();
@@ -315,7 +328,7 @@ void Game::MainLoop(void){
 				Attack* rmAttack = attacks_[i];
 				attacks_.erase(attacks_.begin() + i);
 				scene_.RemoveNode(rmAttack->getSceneNode());
-				player_->takeDamage(1);
+				player_->takeDamage(rmAttack->GetDamage());
 
 				SceneNode* particles = rmAttack->hitParticles(&resman_);
 				if (particles)
@@ -362,28 +375,6 @@ void Game::MainLoop(void){
 			player_->Translate(glm::vec3(0, 0, world->getBounds()[5] - player_->GetPosition().z));
 
 
-
-
-		/*if (firingLaser_) {
-			std::vector<int> astHitIdx;
-			glm::vec3 beamPos1 = player_->GetPosition();
-			glm::vec3 beamPos2 = player_->GetPosition() + glm::vec3(0, 0, 50) * player_->GetForward();
-			for (int i = 0; i < asteriods_.size(); i++) {
-				float dis = glm::length(glm::cross(beamPos2 - beamPos1, beamPos1 - asteriods_[i]->GetPosition())) / glm::length(beamPos2 - beamPos1);
-				if (dis < 1.25) {
-					scene_.RemoveNode(asteriods_[i]);
-					astHitIdx.push_back(i);
-				}
-			}
-		}
-
-		/*std::cout << (player_->GetForward() * 50.0f).x << ", " << (player_->GetForward() * 50.0f).y << ", " << (player_->GetForward() * 50.0f).z << std::endl;
-		glm::vec3 lookAt = player_->GetPosition() + player_->GetForward() * 50.0f;
-		glm::vec3 upVec(0, 1, 0);
-		if (thirdPerson_)
-			camera_.SetView(player_->GetPosition() + -30.0f * player_->GetForward() + glm::vec3(0, 5, 0), lookAt, upVec);
-		else camera_.SetView(player_->GetPosition() + player_->GetForward() * 2.0f, lookAt, upVec);*/
-
 		glm::vec3 upVec(0, 1, 0);
 		if (thirdPerson_) {
 			glm::vec3 lookAt = player_->GetPosition() + glm::vec3(0, 0, 50) * camRotation_ * player_->GetForward();
@@ -396,13 +387,13 @@ void Game::MainLoop(void){
 
 		//mainLight_->SetPosition(mainLight_->GetPosition() + glm::vec3(glm::sin(glfwGetTime()), cos(glfwGetTime()), 0.0f));
 		//mainLight_->SetPosition(mainLight_->GetPosition() + glm::vec3(0.0, 50.0, 0.0));
-		if (mainLight_->GetRange() > 300) {
+		/*if (mainLight_->GetRange() > 300) {
 			direction = -1;
 		}
 		else if (mainLight_->GetRange() < 100) {
 			direction = 1;
 		}
-		mainLight_->SetRange(mainLight_->GetRange() + (10 * direction));
+		mainLight_->SetRange(mainLight_->GetRange() + (10 * direction));*/
 		//skybox_->SetPosition(camera_.GetPosition());
 
 		skybox_->SetPosition(camera_.GetPosition());

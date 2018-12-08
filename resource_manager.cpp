@@ -256,7 +256,7 @@ void ResourceManager::LoadMesh(const std::string name, const char *filename) {
 		}
 		else if (!part[0].compare(std::string("vt"))) {
 			if (part.size() >= 3) {
-				glm::vec2 tex_coord(str_to_num<float>(part[1].c_str()), str_to_num<float>(part[2].c_str()));
+				glm::vec2 tex_coord(str_to_num<float>(part[1].c_str()), 1-str_to_num<float>(part[2].c_str()));
 				mesh.tex_coord.push_back(tex_coord);
 			}
 			else {
@@ -836,6 +836,45 @@ void ResourceManager::CreateCube(std::string object_name, glm::vec3 color) {
 		18, 19, 17,
 		21, 23, 22,
 		22, 21, 20
+	};
+
+	GLuint vbo, ebo;
+	// Create OpenGL vertex buffer for model
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertex), vertex, GL_STATIC_DRAW);
+
+	// Create OpenGL buffer for faces
+	glGenBuffers(1, &ebo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(face), face, GL_STATIC_DRAW);
+
+	// Create resource
+	AddResource(Mesh, object_name, vbo, ebo, sizeof(face) / sizeof(GLuint));
+}
+
+void ResourceManager::CreatePlane(std::string object_name, glm::vec3 color) {
+	// Vertices that form the cube
+	// 11 attributes per vertex: 3D position (3), 3D normal (3), RGB color (3), uv position (2)
+
+	GLfloat vertex[] = {
+		-0.5, 0.0, -0.5,	0.0, 1.0, 0.0,		1.0, 0.0, 0.0,		0.0, 0.0,
+		0.5, 0.0, -0.5,		0.0, 1.0, 0.0,		0.0, 1.0, 0.0,		1.0, 0.0,
+		-0.5, 0.0, 0.5,		0.0, 1.0, 0.0,		0.0, 0.0, 1.0,		0.0, 1.0,
+		0.5, 0.0, 0.5,		0.0, 1.0, 0.0,		0.0, 0.0, 0.0,		1.0, 1.0
+	};
+
+	if (color.r >= 0 && color.r <= 1) {
+		for (int i = 0; i < 4; i++) {
+			vertex[i * 11 + 6] = color.r;
+			vertex[i * 11 + 7] = color.g;
+			vertex[i * 11 + 8] = color.b;
+		}
+	}
+
+	GLuint face[] = {
+		0, 2, 3,
+		3, 1, 0
 	};
 
 	GLuint vbo, ebo;
