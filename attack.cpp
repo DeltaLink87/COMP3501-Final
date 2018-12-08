@@ -56,6 +56,10 @@ void Attack::SetPosition(glm::vec3 position) {
 	this->position = position;
 }
 
+glm::vec3 Attack::GetPosition() const {
+	return position;
+}
+
 void Attack::SetOrientation(glm::quat orientation) {
 	this->orientation = orientation;
 }

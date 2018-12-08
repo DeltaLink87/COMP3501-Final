@@ -365,13 +365,25 @@ void Game::MainLoop(void){
 					scene_.RemoveNode(rmAttack->getSceneNode());
 
 					SceneNode* particles = rmAttack->hitParticles(&resman_);
-					if (particles) 
+					if (particles)
 						scene_.AddNode(particles);
 
 					i--;
 					delete rmAttack;
 
 					break;
+				}
+			}
+
+			if (i >= 0) {
+				if (attacks_[i]->GetPosition().x < world->getBounds()[0] || attacks_[i]->GetPosition().x > world->getBounds()[1] ||
+						attacks_[i]->GetPosition().y < world->getBounds()[2] || attacks_[i]->GetPosition().y > world->getBounds()[3] ||
+						attacks_[i]->GetPosition().z < world->getBounds()[4] || attacks_[i]->GetPosition().z > world->getBounds()[5]) {
+					Attack* rmAttack = attacks_[i];
+					attacks_.erase(attacks_.begin() + i);
+					scene_.RemoveNode(rmAttack->getSceneNode());
+					i--;
+					delete rmAttack;
 				}
 			}
 		}

@@ -38,6 +38,7 @@ namespace game {
 			virtual ParticleSystem* hitParticles(ResourceManager* resMan);
 
 			void SetPosition(glm::vec3 position);
+			glm::vec3 GetPosition() const;
 			void SetOrientation(glm::quat orientation);
 			void SetMovment(glm::vec3 move);
 			void SetAcceleration(glm::vec3 acc);
